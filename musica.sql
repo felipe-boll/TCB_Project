@@ -15,14 +15,6 @@ CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
 USE `mydb` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`table1`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`table1` (
-)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`pessoa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`pessoa` (
@@ -68,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`musica` (
   `idmusica` INT NOT NULL AUTO_INCREMENT,
   `dificuldade` INT NOT NULL,
   `duracao` TIME NOT NULL,
-  `letra` VARCHAR(40200) NOT NULL,
+  `letra` TEXT NOT NULL,
   `estilo_idestilo` INT NOT NULL,
   PRIMARY KEY (`idmusica`),
   INDEX `fk_musica_estilo1_idx` (`estilo_idestilo` ASC) VISIBLE,
