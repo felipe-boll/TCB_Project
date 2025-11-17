@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Musica {
     private String nome;
-    private boolean dificuldade;
+    private double dificuldade;
     private Time duracao;
     private String letra;
     private ArrayList<Instrumento> instrumentos = new ArrayList<>();
@@ -20,14 +20,6 @@ public class Musica {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public boolean isDificuldade() {
-        return dificuldade;
-    }
-
-    public void setDificuldade(boolean dificuldade) {
-        this.dificuldade = dificuldade;
     }
 
     public Time getDuracao() {
@@ -68,6 +60,14 @@ public class Musica {
 
     public void setEstilos(ArrayList<Estilo> estilos) {
         this.estilos = estilos;
+    }
+
+    public double getDificuldade() {
+        return dificuldade;
+    }
+
+    public void setDificuldade(double dificuldade) {
+        this.dificuldade = dificuldade;
     }
 
 }
