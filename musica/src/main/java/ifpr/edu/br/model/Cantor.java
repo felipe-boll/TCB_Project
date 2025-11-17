@@ -11,4 +11,22 @@ public class Cantor extends Pessoa {
         this.banda = banda;
         this.musicas = musicas;
     }
+
+    public ArrayList<Musica> getMusicas() {
+        return musicas;
+    }
+
+    public void setMusicas(ArrayList<Musica> musicas) {
+        this.musicas = musicas;
+    }
+
+    public Banda getBanda() {
+        return banda;
+    }
+
+    public void setBanda(Banda banda) {
+        this.banda = banda;
+    }
+
+    
 }
