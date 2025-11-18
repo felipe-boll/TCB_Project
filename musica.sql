@@ -51,7 +51,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `mydb`.`musica` (
   `idmusica` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(200) NOT NULL,
-  `dificuldade` INT NOT NULL,
+  `dificuldade` DOUBLE PRECISION NOT NULL,
   `duracao` TIME NOT NULL,
   `letra` TEXT NOT NULL,
   PRIMARY KEY (`idmusica`))
