@@ -33,6 +33,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `mydb`.`banda` (
   `idbanda` INT NOT NULL AUTO_INCREMENT,
   `agencia_idagencia` INT NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`idbanda`),
   INDEX `fk_banda_agencia1_idx` (`agencia_idagencia` ASC) VISIBLE,
   CONSTRAINT `fk_banda_agencia1`
@@ -49,6 +50,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`musica` (
   `idmusica` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(200) NOT NULL,
   `dificuldade` INT NOT NULL,
   `duracao` TIME NOT NULL,
   `letra` TEXT NOT NULL,
