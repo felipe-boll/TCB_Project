@@ -7,6 +7,15 @@ public class Banda {
     private ArrayList<Cantor> cantores = new ArrayList<>();
     private ArrayList<Musica> musicas = new ArrayList<>();
     private Agencia agencia;
+    private int bandaID;
+
+    public int getBandaID() {
+        return bandaID;
+    }
+
+    public void setBandaID(int bandaID) {
+        this.bandaID = bandaID;
+    }
 
     public Banda(){}
 

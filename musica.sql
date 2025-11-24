@@ -38,9 +38,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`banda` (
   INDEX `fk_banda_agencia1_idx` (`agencia_idagencia` ASC) VISIBLE,
   CONSTRAINT `fk_banda_agencia1`
     FOREIGN KEY (`agencia_idagencia`)
-    REFERENCES `mydb`.`agencia` (`idagencia`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `mydb`.`agencia` (`idagencia`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -51,7 +49,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `mydb`.`musica` (
   `idmusica` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(200) NOT NULL,
-  `dificuldade` DOUBLE PRECISION NOT NULL,
+  `dificuldade` DOUBLE NOT NULL,
   `duracao` TIME NOT NULL,
   `letra` TEXT NOT NULL,
   PRIMARY KEY (`idmusica`))
@@ -98,11 +96,16 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `mydb`.`cantor` (
   `idcantor` INT NOT NULL AUTO_INCREMENT,
   `pessoa_idpessoa` INT NOT NULL,
+  `banda_idbanda` INT NOT NULL,
   PRIMARY KEY (`idcantor`),
   INDEX `fk_cantor_pessoa1_idx` (`pessoa_idpessoa` ASC) VISIBLE,
+  INDEX `fk_cantor_banda1_idx` (`banda_idbanda` ASC) VISIBLE,
   CONSTRAINT `fk_cantor_pessoa1`
     FOREIGN KEY (`pessoa_idpessoa`)
-    REFERENCES `mydb`.`pessoa` (`idpessoa`)
+    REFERENCES `mydb`.`pessoa` (`idpessoa`),
+  CONSTRAINT `fk_cantor_banda1`
+    FOREIGN KEY (`banda_idbanda`)
+    REFERENCES `mydb`.`banda` (`idbanda`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -121,6 +124,25 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
+-- Table `mydb`.`estilo_has_musica`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`estilo_has_musica` (
+  `estilo_idestilo` INT NOT NULL,
+  `musica_idmusica` INT NOT NULL,
+  PRIMARY KEY (`estilo_idestilo`, `musica_idmusica`),
+  INDEX `fk_estilo_has_musica_musica1_idx` (`musica_idmusica` ASC) VISIBLE,
+  INDEX `fk_estilo_has_musica_estilo1_idx` (`estilo_idestilo` ASC) VISIBLE,
+  CONSTRAINT `fk_estilo_has_musica_estilo1`
+    FOREIGN KEY (`estilo_idestilo`)
+    REFERENCES `mydb`.`estilo` (`idestilo`),
+  CONSTRAINT `fk_estilo_has_musica_musica1`
+    FOREIGN KEY (`musica_idmusica`)
+    REFERENCES `mydb`.`musica` (`idmusica`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
 -- Table `mydb`.`instrumento`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`instrumento` (
@@ -128,6 +150,25 @@ CREATE TABLE IF NOT EXISTS `mydb`.`instrumento` (
   `nome` VARCHAR(45) NOT NULL,
   `descricao` VARCHAR(1000) NULL DEFAULT NULL,
   PRIMARY KEY (`idinstrumento`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`musica_has_instrumento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`musica_has_instrumento` (
+  `musica_idmusica` INT NOT NULL,
+  `instrumento_idinstrumento` INT NOT NULL,
+  PRIMARY KEY (`musica_idmusica`, `instrumento_idinstrumento`),
+  INDEX `fk_musica_has_instrumento_instrumento1_idx` (`instrumento_idinstrumento` ASC) VISIBLE,
+  INDEX `fk_musica_has_instrumento_musica1_idx` (`musica_idmusica` ASC) VISIBLE,
+  CONSTRAINT `fk_musica_has_instrumento_instrumento1`
+    FOREIGN KEY (`instrumento_idinstrumento`)
+    REFERENCES `mydb`.`instrumento` (`idinstrumento`),
+  CONSTRAINT `fk_musica_has_instrumento_musica1`
+    FOREIGN KEY (`musica_idmusica`)
+    REFERENCES `mydb`.`musica` (`idmusica`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -143,29 +184,6 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`estilo_has_musica`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`estilo_has_musica` (
-  `estilo_idestilo` INT NOT NULL,
-  `musica_idmusica` INT NOT NULL,
-  PRIMARY KEY (`estilo_idestilo`, `musica_idmusica`),
-  INDEX `fk_estilo_has_musica_musica1_idx` (`musica_idmusica` ASC) VISIBLE,
-  INDEX `fk_estilo_has_musica_estilo1_idx` (`estilo_idestilo` ASC) VISIBLE,
-  CONSTRAINT `fk_estilo_has_musica_estilo1`
-    FOREIGN KEY (`estilo_idestilo`)
-    REFERENCES `mydb`.`estilo` (`idestilo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_estilo_has_musica_musica1`
-    FOREIGN KEY (`musica_idmusica`)
-    REFERENCES `mydb`.`musica` (`idmusica`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`usuario_has_musica`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`usuario_has_musica` (
@@ -174,62 +192,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`usuario_has_musica` (
   PRIMARY KEY (`usuario_idusuario`, `musica_idmusica`),
   INDEX `fk_usuario_has_musica_musica1_idx` (`musica_idmusica` ASC) VISIBLE,
   INDEX `fk_usuario_has_musica_usuario1_idx` (`usuario_idusuario` ASC) VISIBLE,
-  CONSTRAINT `fk_usuario_has_musica_usuario1`
-    FOREIGN KEY (`usuario_idusuario`)
-    REFERENCES `mydb`.`usuario` (`idusuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_usuario_has_musica_musica1`
     FOREIGN KEY (`musica_idmusica`)
-    REFERENCES `mydb`.`musica` (`idmusica`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`musica_has_instrumento`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`musica_has_instrumento` (
-  `musica_idmusica` INT NOT NULL,
-  `instrumento_idinstrumento` INT NOT NULL,
-  PRIMARY KEY (`musica_idmusica`, `instrumento_idinstrumento`),
-  INDEX `fk_musica_has_instrumento_instrumento1_idx` (`instrumento_idinstrumento` ASC) VISIBLE,
-  INDEX `fk_musica_has_instrumento_musica1_idx` (`musica_idmusica` ASC) VISIBLE,
-  CONSTRAINT `fk_musica_has_instrumento_musica1`
-    FOREIGN KEY (`musica_idmusica`)
-    REFERENCES `mydb`.`musica` (`idmusica`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_musica_has_instrumento_instrumento1`
-    FOREIGN KEY (`instrumento_idinstrumento`)
-    REFERENCES `mydb`.`instrumento` (`idinstrumento`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`banda_has_cantor`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`banda_has_cantor` (
-  `banda_idbanda` INT NOT NULL,
-  `cantor_idcantor` INT NOT NULL,
-  PRIMARY KEY (`banda_idbanda`, `cantor_idcantor`),
-  INDEX `fk_banda_has_cantor_cantor1_idx` (`cantor_idcantor` ASC) VISIBLE,
-  INDEX `fk_banda_has_cantor_banda1_idx` (`banda_idbanda` ASC) VISIBLE,
-  CONSTRAINT `fk_banda_has_cantor_banda1`
-    FOREIGN KEY (`banda_idbanda`)
-    REFERENCES `mydb`.`banda` (`idbanda`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_banda_has_cantor_cantor1`
-    FOREIGN KEY (`cantor_idcantor`)
-    REFERENCES `mydb`.`cantor` (`idcantor`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `mydb`.`musica` (`idmusica`),
+  CONSTRAINT `fk_usuario_has_musica_usuario1`
+    FOREIGN KEY (`usuario_idusuario`)
+    REFERENCES `mydb`.`usuario` (`idusuario`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 

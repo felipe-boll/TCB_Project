@@ -2,6 +2,7 @@ package ifpr.edu.br.model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import ifpr.edu.br.model.Cantor;
@@ -22,6 +23,11 @@ public class MusicaDAO {
                 psMusica.setString(4, musica.getLetra());
             
                 psMusica.executeUpdate();
+
+                ResultSet rs = psMusica.getGeneratedKeys();
+                int idMusica = 0;
+                if(rs.next()) idMusica = rs.getInt(1);
+                musica.setMusicaID(idMusica);
             }
         } catch(SQLException e){
             // TODO Auto-generated catch block

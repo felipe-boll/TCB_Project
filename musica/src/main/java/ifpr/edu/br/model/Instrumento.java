@@ -3,6 +3,15 @@ package ifpr.edu.br.model;
 public class Instrumento {
     private String nome;
     private String descricao;
+    private int instrumentoID;
+
+    public int getInstrumentoID() {
+        return instrumentoID;
+    }
+
+    public void setInstrumentoID(int instrumentoID) {
+        this.instrumentoID = instrumentoID;
+    }
 
     public Instrumento(){}
 

@@ -8,11 +8,21 @@ public class Musica {
     private double dificuldade;
     private Time duracao;
     private String letra;
+    private int musicaID;
     private ArrayList<Instrumento> instrumentos = new ArrayList<>();
     private ArrayList<Banda> bandas = new ArrayList<>();
     private ArrayList<Estilo> estilos = new ArrayList<>();
 
     public Musica(){}
+
+        
+    public int getMusicaID() {
+        return musicaID;
+    }
+
+    public void setMusicaID(int musicaID) {
+        this.musicaID = musicaID;
+    }
 
     public String getNome() {
         return nome;

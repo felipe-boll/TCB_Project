@@ -6,7 +6,16 @@ public class Agencia {
     private String nome;
     private String email;
     private String cnpj;
+    private int agenciaID;
     private ArrayList<Banda> bandas = new ArrayList<>();
+
+    public int getAgenciaID() {
+        return agenciaID;
+    }
+
+    public void setAgenciaID(int agenciaID) {
+        this.agenciaID = agenciaID;
+    }
 
     public Agencia(){}
 

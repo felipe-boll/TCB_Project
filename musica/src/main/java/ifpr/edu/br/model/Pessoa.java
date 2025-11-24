@@ -5,12 +5,22 @@ public class Pessoa {
     private String email;
     private int idade;
     private String cpf;
+    private int pessoaID;
 
     public Pessoa(String nome, String email, String cpf, int idade){
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
         this.idade = idade;
+    }
+
+
+    public int getPessoaID() {
+        return pessoaID;
+    }
+
+    public void setPessoaID(int pessoaID) {
+        this.pessoaID = pessoaID;
     }
 
     public String getNome() {

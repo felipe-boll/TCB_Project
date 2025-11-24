@@ -5,6 +5,15 @@ import java.util.ArrayList;
 public class Cantor extends Pessoa {
     private ArrayList<Musica> musicas = new ArrayList<>();
     private Banda banda;
+    private int cantorID;
+
+    public int getCantorID() {
+        return cantorID;
+    }
+
+    public void setCantorID(int cantorID) {
+        this.cantorID = cantorID;
+    }
 
     public Cantor(String nome, String cpf, String email, int idade, ArrayList<Musica> musicas, Banda banda){
         super(nome, email, cpf, idade);
