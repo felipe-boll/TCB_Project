@@ -1,6 +1,5 @@
 package ifpr.edu.br.model.dao;
 
-import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -17,7 +16,10 @@ public class InstrumentoDAO {
             PreparedStatement psInstrumento = con.prepareStatement(sqlInstrumento);
 
             for(Instrumento instrumento : musica.getInstrumentos()){
-                
+                psInstrumento.setString(1, instrumento.getNome());
+                psInstrumento.setString(2, instrumento.getDescricao());
+
+                psInstrumento.executeUpdate();
             }
 
         } catch(SQLException e){
