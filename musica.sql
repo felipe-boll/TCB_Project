@@ -100,14 +100,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`cantor` (
   PRIMARY KEY (`idcantor`),
   INDEX `fk_cantor_pessoa1_idx` (`pessoa_idpessoa` ASC) VISIBLE,
   INDEX `fk_cantor_banda1_idx` (`banda_idbanda` ASC) VISIBLE,
-  CONSTRAINT `fk_cantor_pessoa1`
-    FOREIGN KEY (`pessoa_idpessoa`)
-    REFERENCES `mydb`.`pessoa` (`idpessoa`),
   CONSTRAINT `fk_cantor_banda1`
     FOREIGN KEY (`banda_idbanda`)
-    REFERENCES `mydb`.`banda` (`idbanda`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `mydb`.`banda` (`idbanda`),
+  CONSTRAINT `fk_cantor_pessoa1`
+    FOREIGN KEY (`pessoa_idpessoa`)
+    REFERENCES `mydb`.`pessoa` (`idpessoa`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -178,7 +176,15 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`idusuario`))
+  `pessoa_idpessoa` INT NOT NULL,
+  `objetivo` VARCHAR(450) NOT NULL,
+  PRIMARY KEY (`idusuario`),
+  INDEX `fk_usuario_pessoa1_idx` (`pessoa_idpessoa` ASC) VISIBLE,
+  CONSTRAINT `fk_usuario_pessoa1`
+    FOREIGN KEY (`pessoa_idpessoa`)
+    REFERENCES `mydb`.`pessoa` (`idpessoa`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 

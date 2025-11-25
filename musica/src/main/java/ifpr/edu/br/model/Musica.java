@@ -12,10 +12,19 @@ public class Musica {
     private ArrayList<Instrumento> instrumentos = new ArrayList<>();
     private ArrayList<Banda> bandas = new ArrayList<>();
     private ArrayList<Estilo> estilos = new ArrayList<>();
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
 
     public Musica(){}
 
-        
+    public ArrayList<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(ArrayList<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    
     public int getMusicaID() {
         return musicaID;
     }

@@ -36,14 +36,13 @@ public class EstiloDAO {
     }
 
     public void salvarEstilo(Estilo estilo){
-        String sqlEstilo = "INSERT INTO estilo(idestilo, nome) VALUES(?, ?)";
+        String sqlEstilo = "INSERT INTO estilo(nome) VALUES(?)";
         Connection con = ConnectionFactory.getConnection();
 
         try{
             PreparedStatement psEstilo = con.prepareStatement(sqlEstilo, Statement.RETURN_GENERATED_KEYS);
 
-            psEstilo.setInt(1, estilo.getEstiloID());
-            psEstilo.setString(2, estilo.getNome());
+            psEstilo.setString(1, estilo.getNome());
 
             psEstilo.executeUpdate();
 
