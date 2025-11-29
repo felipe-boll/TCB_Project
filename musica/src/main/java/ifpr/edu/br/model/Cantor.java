@@ -1,10 +1,14 @@
 package ifpr.edu.br.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class Cantor extends Pessoa {
-    private ArrayList<Musica> musicas = new ArrayList<>();
-    private Banda banda;
+public class Cantor{
+    private String nome;
+    private String cpf;
+    private String email;
+    private int idade;
+    private List<Musica> musicas;
+    private List<Banda> bandas;
     private int cantorID;
 
     public int getCantorID() {
@@ -15,26 +19,56 @@ public class Cantor extends Pessoa {
         this.cantorID = cantorID;
     }
 
-    public Cantor(String nome, String cpf, String email, int idade, ArrayList<Musica> musicas, Banda banda){
-        super(nome, email, cpf, idade);
-        this.banda = banda;
-        this.musicas = musicas;
+    public Cantor(){
+
     }
 
-    public ArrayList<Musica> getMusicas() {
+    public List<Musica> getMusicas() {
         return musicas;
     }
 
-    public void setMusicas(ArrayList<Musica> musicas) {
+    public void setMusicas(List<Musica> musicas) {
         this.musicas = musicas;
     }
 
-    public Banda getBanda() {
-        return banda;
+    public String getNome() {
+        return nome;
     }
 
-    public void setBanda(Banda banda) {
-        this.banda = banda;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    public List<Banda> getBandas() {
+        return bandas;
+    }
+
+    public void setBandas(List<Banda> bandas) {
+        this.bandas = bandas;
     }
 
     

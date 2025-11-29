@@ -1,7 +1,7 @@
 package ifpr.edu.br.model;
 
 import java.sql.Time;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Musica {
     private String nome;
@@ -9,18 +9,18 @@ public class Musica {
     private Time duracao;
     private String letra;
     private int musicaID;
-    private ArrayList<Instrumento> instrumentos = new ArrayList<>();
-    private ArrayList<Banda> bandas = new ArrayList<>();
-    private ArrayList<Estilo> estilos = new ArrayList<>();
-    private ArrayList<Usuario> usuarios = new ArrayList<>();
+    private List<Instrumento> instrumentos;
+    private List<Banda> bandas;
+    private List<Estilo> estilos;
+    private List<Usuario> usuarios;
 
     public Musica(){}
 
-    public ArrayList<Usuario> getUsuarios() {
+    public List<Usuario> getUsuarios() {
         return usuarios;
     }
 
-    public void setUsuarios(ArrayList<Usuario> usuarios) {
+    public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
 
@@ -57,27 +57,27 @@ public class Musica {
         this.letra = letra;
     }
 
-    public ArrayList<Instrumento> getInstrumentos() {
+    public List<Instrumento> getInstrumentos() {
         return instrumentos;
     }
 
-    public void setInstrumentos(ArrayList<Instrumento> instrumentos) {
+    public void setInstrumentos(List<Instrumento> instrumentos) {
         this.instrumentos = instrumentos;
     }
 
-    public ArrayList<Banda> getBandas() {
+    public List<Banda> getBandas() {
         return bandas;
     }
 
-    public void setBandas(ArrayList<Banda> bandas) {
+    public void setBandas(List<Banda> bandas) {
         this.bandas = bandas;
     }
 
-    public ArrayList<Estilo> getEstilos() {
+    public List<Estilo> getEstilos() {
         return estilos;
     }
 
-    public void setEstilos(ArrayList<Estilo> estilos) {
+    public void setEstilos(List<Estilo> estilos) {
         this.estilos = estilos;
     }
 

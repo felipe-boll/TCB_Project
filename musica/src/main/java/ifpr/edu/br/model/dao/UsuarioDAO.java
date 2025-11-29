@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import ifpr.edu.br.model.Musica;
-import ifpr.edu.br.model.Pessoa;
 import ifpr.edu.br.model.Usuario;
 
 public class UsuarioDAO {
@@ -35,15 +34,14 @@ public class UsuarioDAO {
         }
     }
 
-    public void salvarUsuario(Usuario usuario, Pessoa pessoa){
-        String sqlUsuario = "INSERT INTO usuario(pessoa_idpessoa, objetivo) VALUES(?, ?)";
+    public void salvarUsuario(Usuario usuario){
+        String sqlUsuario = "INSERT INTO usuario(objetivo) VALUES(?)";
         Connection con = ConnectionFactory.getConnection();
 
         try{
             PreparedStatement psUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
 
-            psUsuario.setInt(1, pessoa.getPessoaID());
-            psUsuario.setString(2, usuario.getObjetivo());
+            psUsuario.setString(1, usuario.getObjetivo());
 
             psUsuario.executeUpdate();
 

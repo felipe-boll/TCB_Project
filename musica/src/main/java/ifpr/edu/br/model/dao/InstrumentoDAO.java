@@ -4,14 +4,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import ifpr.edu.br.model.Instrumento;
 import ifpr.edu.br.model.Musica;
 
 public class InstrumentoDAO {
+
+    private Connection con;
+
+    public InstrumentoDAO(){
+        this.con = ConnectionFactory.getConnection();
+    }
+
     public void salvarInstrumentoHasMusica(Musica musica){
         String sqlInstrumento = "INSERT INTO musica_has_instrumento(musica_idmusica, instrumento_idinstrumento) VALUES(?, ?)";
-        Connection con = ConnectionFactory.getConnection();
 
         try{
             PreparedStatement psInstrumento = con.prepareStatement(sqlInstrumento);
@@ -34,9 +42,8 @@ public class InstrumentoDAO {
         }
     }
 
-    public void salvarInstrumeno(Instrumento instrumento){
+    public void salvarInstrumento(Instrumento instrumento){
         String sqlInstrumento = "INSERT INTO instrumento(nome, descricao) VALUES(?, ?)";
-        Connection con = ConnectionFactory.getConnection();
 
         try{
             PreparedStatement psInstrumento = con.prepareStatement(sqlInstrumento);
@@ -47,6 +54,42 @@ public class InstrumentoDAO {
         } catch(SQLException e){
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+    }
+
+    public List<Instrumento> listarInstrumentos(){
+        List<Instrumento> lista = new ArrayList<>();
+        String sql = "SELECT * FROM instrumento";
+
+        try{
+            PreparedStatement psInstrumento = con.prepareStatement(sql);
+            ResultSet rs = psInstrumento.executeQuery();
+
+            while (rs.next()) {
+                Instrumento instrumento = new Instrumento();
+                instrumento.setInstrumentoID(rs.getInt("idinstrumento"));
+                instrumento.setNome(rs.getString("nome"));
+                instrumento.setDescricao(rs.getString("descricao"));
+
+                lista.add(instrumento);
+            }
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao listar os estilos");
+        }
+
+        return lista;
+    }
+
+    public void deletarEstilo(int idInstrumento){
+        String sql = "DELETE FROM instrumento WHERE idinstrumento = ?";
+
+        try{
+            PreparedStatement psInstrumento = con.prepareStatement(sql);
+            psInstrumento.setInt(1, idInstrumento);
+
+            psInstrumento.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao deletar o instrumento");
         }
     }
 }

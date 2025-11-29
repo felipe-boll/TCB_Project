@@ -43,11 +43,11 @@ public class Banda {
         this.musicas = musicas;
     }
 
-    public Agencia getAgencia() {
+    public Agencia getAgenciaID() {
         return agencia;
     }
 
-    public void setAgencia(Agencia agencia) {
+    public void setAgenciaID(Agencia agencia) {
         this.agencia = agencia;
     }
 }

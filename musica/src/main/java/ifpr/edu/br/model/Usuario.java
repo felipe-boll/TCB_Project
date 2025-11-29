@@ -1,12 +1,14 @@
 package ifpr.edu.br.model;
 
-public class Usuario extends Pessoa {
+public class Usuario {
+    private String nome;
+    private String cpf;
+    private String email;
+    private int idade;
     private String objetivo;
     private int usuarioID;
 
-    public Usuario(String nome, String cpf, String email, int idade, String objetivo){
-        super(nome, cpf, email, idade);
-        this.objetivo = objetivo;
+    public Usuario(){
     }
 
     public String getObjetivo() {
@@ -24,5 +26,37 @@ public class Usuario extends Pessoa {
 
     public void setUsuarioID(int usuarioID) {
         this.usuarioID = usuarioID;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
     }
 }
