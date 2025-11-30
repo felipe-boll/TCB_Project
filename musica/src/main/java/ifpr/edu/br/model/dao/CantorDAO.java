@@ -56,8 +56,10 @@ public class CantorDAO {
                 Cantor cantor = new Cantor();
                 cantor.setCantorID(rs.getInt("idcantor"));
                 cantor.setNome(rs.getString("nome"));
-
-                cantor.setBandas(listarBandas(cantor.getCantorID()));
+                
+                int idBanda = rs.getInt("banda_idbanda");
+                Banda banda = buscarBanda(idBanda);
+                cantor.setBanda(banda);
 
                 lista.add(cantor);
             }
@@ -67,14 +69,17 @@ public class CantorDAO {
         return lista;
     }
 
-    public void atualizarCantor(String nome, int idade, int idCantor) {
-        String sql = "UPDATE cantor SET nome = ?, idade = ? WHERE idcantor = ?";
+    // analisar o banco pra saber se tem banda em cantor para atualizar
+    public void atualizarCantor(Cantor cantor) {
+        String sql = "UPDATE cantor SET nome = ?, cpf = ?, email = ?, idade = ? WHERE idcantor = ?";
 
         try {
             PreparedStatement psCantor = con.prepareStatement(sql);
-            psCantor.setString(1, nome);
-            psCantor.setInt(2, idade);
-            psCantor.setInt(3, idCantor);
+            psCantor.setString(1, cantor.getNome());
+            psCantor.setString(2, cantor.getCpf());
+            psCantor.setString(3, cantor.getEmail());
+            psCantor.setInt(4, cantor.getIdade());
+            psCantor.setInt(5, cantor.getCantorID());
 
             psCantor.executeUpdate();
         } catch (SQLException e) {
@@ -96,32 +101,26 @@ public class CantorDAO {
         }
     }
 
-    private List<Banda> listarBandas(int idCantor) {
-        List<Banda> bandas = new ArrayList<>();
-        String sql = """
-            SELECT b.idbanda, b.nome
-            FROM banda b
-            JOIN cantor_has_banda chb ON b.idbanda = chb.banda_idbanda
-            WHERE chb.cantor_idcantor = ?
-        """;
+    private Banda buscarBanda(int idBanda) {
+    Banda banda = null;
+    String sql = "SELECT * FROM banda WHERE idbanda = ?";
 
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, idCantor);
-            ResultSet rs = ps.executeQuery();
+    try {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, idBanda);
+        ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Banda banda = new Banda();
-                banda.setBandaID(rs.getInt("idbanda"));
-                banda.setNome(rs.getString("nome"));
-                bandas.add(banda);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            banda = new Banda();
+            banda.setBandaID(rs.getInt("idbanda"));
+            banda.setNome(rs.getString("nome"));
         }
-
-        return bandas;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
 
-    
+    return banda;
+}
+
+
 }

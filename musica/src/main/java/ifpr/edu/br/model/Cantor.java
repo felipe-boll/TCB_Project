@@ -7,8 +7,9 @@ public class Cantor{
     private String cpf;
     private String email;
     private int idade;
+    // Isso esta sendo usado Felipe;
     private List<Musica> musicas;
-    private List<Banda> bandas;
+    private Banda banda;
     private int cantorID;
 
     public int getCantorID() {
@@ -63,12 +64,12 @@ public class Cantor{
         this.idade = idade;
     }
 
-    public List<Banda> getBandas() {
-        return bandas;
+    public Banda getBanda() {
+        return banda;
     }
 
-    public void setBandas(List<Banda> bandas) {
-        this.bandas = bandas;
+    public void setBanda(Banda banda) {
+        this.banda = banda;
     }
 
     
