@@ -114,6 +114,7 @@ public class Main {
     }
 
     public static void menuUsuario(Usuario u){
+        while (true) {
         limparTela();
         System.out.printf("Bem-vindo(a), %s!", u.getNome());
         espera();
@@ -324,6 +325,8 @@ public class Main {
             default:
                 break;
         }
+        limparBuffer();
+        }
     }
 
     public static void main(String[] args) {
@@ -338,10 +341,7 @@ public class Main {
             } else if (opcao == 2) {
                 Usuario u = fazerLogin();
                 if (u != null) {
-                    while (true) {
-                        menuUsuario(u);
-                        limparBuffer();
-                    }
+                    menuUsuario(u);
                 }
             }
         }
