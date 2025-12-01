@@ -18,6 +18,8 @@ public class BandaController {
     }
 
     dao.salvarBanda(banda);
+
+    System.out.printf("Banda Cadastrada com sucesso!\nID da banda: %d\n", banda.getBandaID());
   }
 
   public List<Banda> listarBandas(){

@@ -2,7 +2,6 @@ package ifpr.edu.br.controller;
 
 import java.util.List;
 
-import ifpr.edu.br.model.Banda;
 import ifpr.edu.br.model.Cantor;
 import ifpr.edu.br.model.dao.CantorDAO;
 
@@ -13,12 +12,12 @@ public class CantorController {
     dao = new CantorDAO();
   }
 
-  public void cadastrarCantor(Cantor cantor, Banda banda) {
+  public void cadastrarCantor(Cantor cantor, int idBanda) {
     if (cantor.getNome() == null || cantor.getNome().trim().isEmpty()) {
       throw new  IllegalArgumentException("O nome do cantor não pode ser vazio.");
     }
     
-    dao.salvarCantor(banda, cantor);
+    dao.salvarCantor(cantor, idBanda);
   }
 
   public List<Cantor> listarCantores(){

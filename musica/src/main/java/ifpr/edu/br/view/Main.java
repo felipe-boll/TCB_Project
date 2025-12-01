@@ -11,6 +11,7 @@ import ifpr.edu.br.controller.InstrumentoController;
 import ifpr.edu.br.controller.MusicaController;
 import ifpr.edu.br.controller.UsuarioController;
 import ifpr.edu.br.model.Banda;
+import ifpr.edu.br.model.Cantor;
 import ifpr.edu.br.model.Musica;
 import ifpr.edu.br.model.Usuario;
 
@@ -70,24 +71,75 @@ public class Main {
     public static void criarConta(){
         limparBuffer();
         limparTela();
-        System.out.printf("====Criar Conta====\n");
-        Usuario u = new Usuario();
-        System.out.print("Nome: ");
-        u.setNome(tecladoScanner.nextLine());
-        System.out.print("Email: ");
-        u.setEmail(tecladoScanner.nextLine());
-        System.out.print("Senha: ");
-        u.setSenha(tecladoScanner.nextLine());
-        System.out.print("Idade: ");
-        u.setIdade(tecladoScanner.nextInt());
-        System.out.print("Objetivo: ");
-        u.setObjetivo(tecladoScanner.next());
+        System.out.printf("Gostaria de criar um conta como:\n1.Usuario\n2.Cantor\n");
+        int opcao = tecladoScanner.nextInt();
+        if (opcao == 1) {
+            limparTela();
+            limparBuffer();
+            System.out.printf("====Criar Conta como Usuario====\n");
+            Usuario u = new Usuario();
+            System.out.print("Nome: ");
+            u.setNome(tecladoScanner.nextLine());
+            System.out.print("Email: ");
+            u.setEmail(tecladoScanner.nextLine());
+            System.out.print("Senha: ");
+            u.setSenha(tecladoScanner.nextLine());
+            System.out.print("Idade: ");
+            u.setIdade(tecladoScanner.nextInt());
+            System.out.print("Objetivo: ");
+            u.setObjetivo(tecladoScanner.next());
 
-        controllerUsuario.cadastrarUsuario(u);
-        limparTela();
-        System.out.printf("\nUsuario cadastrado com sucesso\n");
-        espera();
-        return;
+            controllerUsuario.cadastrarUsuario(u);
+            limparTela();
+            System.out.printf("\nUsuario cadastrado com sucesso\n");
+            espera();
+            return;
+        } else{
+            limparTela();
+            limparBuffer();
+            System.out.printf("====Criar Conta como Cantor====\n");
+            Cantor c = new Cantor();
+            System.out.print("Nome: ");
+            c.setNome(tecladoScanner.nextLine());
+            System.out.print("Email: ");
+            c.setEmail(tecladoScanner.nextLine());
+            System.out.printf("CPF: ");
+            c.setCpf(tecladoScanner.nextLine());
+            System.out.printf("Idade: ");
+            c.setIdade(tecladoScanner.nextInt());
+            System.out.print("Ja possui uma banda cadastrada(S/N): ");
+            String resposta = tecladoScanner.next().toLowerCase();
+            int idBanda;
+            if (resposta.equals("s")) {
+                System.out.print("ID Banda: ");
+                idBanda = tecladoScanner.nextInt();
+
+                controllerCantor.cadastrarCantor(c, idBanda);
+                limparTela();
+            } else{
+                espera();
+                limparTela();
+                limparBuffer();
+                System.out.printf("====Então vamos cadastrar uma Banda\n");
+                Banda b = new Banda();
+                System.out.print("Nome: ");
+                b.setNome(tecladoScanner.nextLine());
+                System.out.print("ID da Agencia: ");
+                b.setAgenciaID(tecladoScanner.nextInt());
+
+                controllerBanda.cadastrarBanda(b);
+
+                System.out.print("Pressione Enter para continuar...");
+                limparBuffer();
+                tecladoScanner.nextLine();
+                limparTela();
+                
+                idBanda = b.getBandaID();
+
+                controllerCantor.cadastrarCantor(c, idBanda);
+                limparTela();
+            }
+        }
     }
 
     public static Usuario fazerLogin(){
@@ -165,11 +217,11 @@ public class Main {
                             cantores += banda.getCantores().get(i).getNome() + ", ";
                         }
                     }
-                    System.out.printf("ID: %d | Agencia: %d | Nome: %s | Cantores %s", banda.getBandaID(), banda.getAgenciaID(), banda.getNome(), cantores);
+                    System.out.printf("ID: %d | Agencia: %d | Nome: %s | Cantores: %s\n", banda.getBandaID(), banda.getAgenciaID(), banda.getNome(), cantores);
                 }
                 System.out.println("Pressione Enter para continuar ...");
-                limparBuffer();
                 tecladoScanner.nextLine();
+                limparBuffer();
                 break;
             case 3:
                 limparTela();

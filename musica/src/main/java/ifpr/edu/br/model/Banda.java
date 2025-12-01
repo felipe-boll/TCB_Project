@@ -1,12 +1,13 @@
 package ifpr.edu.br.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Banda {
     private String nome;
-    private ArrayList<Cantor> cantores = new ArrayList<>();
+    private List<Cantor> cantores = new ArrayList<>();
     private ArrayList<Musica> musicas = new ArrayList<>();
-    private Agencia agencia;
+    private int agenciaID;
     private int bandaID;
 
     public int getBandaID() {
@@ -27,11 +28,11 @@ public class Banda {
         this.nome = nome;
     }
 
-    public ArrayList<Cantor> getCantores() {
+    public List<Cantor> getCantores() {
         return cantores;
     }
 
-    public void setCantores(ArrayList<Cantor> cantores) {
+    public void setCantores(List<Cantor> cantores) {
         this.cantores = cantores;
     }
 
@@ -43,11 +44,11 @@ public class Banda {
         this.musicas = musicas;
     }
 
-    public Agencia getAgenciaID() {
-        return agencia;
+    public int getAgenciaID() {
+        return agenciaID;
     }
 
-    public void setAgenciaID(Agencia agencia) {
-        this.agencia = agencia;
+    public void setAgenciaID(int agenciaID) {
+        this.agenciaID = agenciaID;
     }
 }

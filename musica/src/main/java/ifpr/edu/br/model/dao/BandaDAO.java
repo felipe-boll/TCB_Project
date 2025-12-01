@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import ifpr.edu.br.model.Agencia;
 import ifpr.edu.br.model.Banda;
@@ -22,13 +23,19 @@ public class BandaDAO {
         String sqlBanda = "INSERT INTO banda(nome, agencia_idagencia) VALUES(?, ?)";
 
         try {
-            PreparedStatement psBanda = con.prepareStatement(sqlBanda);
+            PreparedStatement psBanda = con.prepareStatement(sqlBanda, Statement.RETURN_GENERATED_KEYS);
 
             psBanda.setString(1, banda.getNome());
-            psBanda.setInt(2, banda.getAgenciaID().getAgenciaID());
+            psBanda.setInt(2, banda.getAgenciaID());
 
+            psBanda.executeUpdate();
+
+            ResultSet rs = psBanda.getGeneratedKeys();
+            int idBanda = 0;
+            if(rs.next()) idBanda = rs.getInt(1);
+            banda.setBandaID(idBanda);
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao salvar a banda");
+            throw new RuntimeException("Erro ao salvar a banda: " + e.getMessage());
         }
     }
 
@@ -40,14 +47,20 @@ public class BandaDAO {
             PreparedStatement psBanda = con.prepareStatement(sql);
             ResultSet rs = psBanda.executeQuery();
 
+            CantorDAO cantorDAO = new CantorDAO();
+
             while (rs.next()) {
                 Banda banda = new Banda();
                 banda.setBandaID(rs.getInt("idbanda"));
                 banda.setNome(rs.getString("nome"));
 
                 Agencia agencia = new Agencia();
-                agencia.setAgenciaID(rs.getInt("agencia_idagencia"));
-                banda.setAgenciaID(agencia);
+                int idAgencia = rs.getInt("agencia_idagencia");
+
+                agencia.setAgenciaID(idAgencia);
+                banda.setAgenciaID(idAgencia);
+
+                banda.setCantores(cantorDAO.listarCantoresPorBanda(banda.getBandaID()));
 
                 lista.add(banda);
             }
@@ -65,7 +78,7 @@ public class BandaDAO {
             PreparedStatement psBanda = con.prepareStatement(sql);
 
             psBanda.setString(1, banda.getNome());
-            psBanda.setInt(2, banda.getAgenciaID().getAgenciaID());
+            psBanda.setInt(2, banda.getAgenciaID());
 
             psBanda.executeUpdate();
         } catch(SQLException e){

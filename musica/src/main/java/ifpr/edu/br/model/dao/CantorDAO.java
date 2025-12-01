@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +20,17 @@ public class CantorDAO {
         this.con = ConnectionFactory.getConnection();
     }
 
-    public void salvarCantor(Banda banda, Cantor cantor) {
+    public void salvarCantor(Cantor cantor, int idBanda) {
         String sqlCantor = "INSERT INTO cantor(nome, cpf, email, idade, banda_idbanda) VALUES(?, ?, ?, ?, ?)";
 
         try {
-            PreparedStatement psCantor = con.prepareStatement(sqlCantor);
+            PreparedStatement psCantor = con.prepareStatement(sqlCantor, Statement.RETURN_GENERATED_KEYS);
 
             psCantor.setString(1, cantor.getNome());
             psCantor.setString(2, cantor.getCpf());
             psCantor.setString(3, cantor.getEmail());
             psCantor.setInt(4, cantor.getIdade());
-            psCantor.setInt(5, banda.getBandaID());
+            psCantor.setInt(5, idBanda);
 
             psCantor.executeUpdate();
 
@@ -102,25 +103,48 @@ public class CantorDAO {
     }
 
     private Banda buscarBanda(int idBanda) {
-    Banda banda = null;
-    String sql = "SELECT * FROM banda WHERE idbanda = ?";
+        Banda banda = null;
+        String sql = "SELECT * FROM banda WHERE idbanda = ?";
 
-    try {
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, idBanda);
-        ResultSet rs = ps.executeQuery();
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idBanda);
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            banda = new Banda();
-            banda.setBandaID(rs.getInt("idbanda"));
-            banda.setNome(rs.getString("nome"));
+            if (rs.next()) {
+                banda = new Banda();
+                banda.setBandaID(rs.getInt("idbanda"));
+                banda.setNome(rs.getString("nome"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return banda;
     }
 
-    return banda;
-}
+    public List<Cantor> listarCantoresPorBanda(int idBanda) {
+        List<Cantor> lista = new ArrayList<>();
+        String sql = "SELECT * FROM cantor WHERE banda_idbanda = ?";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idBanda);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Cantor cantor = new Cantor();
+                    cantor.setCantorID(rs.getInt("idcantor"));
+                cantor.setNome(rs.getString("nome"));
+                lista.add(cantor);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar cantores da banda");
+        }
+
+        return lista;
+    }
 
 
 }
