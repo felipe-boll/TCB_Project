@@ -1,12 +1,11 @@
 package ifpr.edu.br.model;
 
-import java.sql.Time;
 import java.util.List;
 
 public class Musica {
     private String nome;
     private double dificuldade;
-    private Time duracao;
+    private String duracao;
     private String letra;
     private int musicaID;
     private List<Instrumento> instrumentos;
@@ -41,11 +40,11 @@ public class Musica {
         this.nome = nome;
     }
 
-    public Time getDuracao() {
+    public String getDuracao() {
         return duracao;
     }
 
-    public void setDuracao(Time duracao) {
+    public void setDuracao(String duracao) {
         this.duracao = duracao;
     }
 

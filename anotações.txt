@@ -1,0 +1,2 @@
+Trocar a duracao para String na tabela.
+Olhar os insert se tem Statement.KEYS nao sei das quantas

@@ -68,4 +68,8 @@ public class MusicaController {
     dao.deletarMusica(musica.getMusicaID());
   }
 
+  public List<Musica> listarMusicasPorBanda(int idBanda) {
+    return dao.listarMusicasPorBanda(idBanda);
+  }
+
 }

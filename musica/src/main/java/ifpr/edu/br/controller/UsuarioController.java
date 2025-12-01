@@ -16,8 +16,8 @@ public class UsuarioController {
     dao.cadastrarUsuario(usuario);
   }
 
-  public Usuario login(Usuario usuario){
-    return dao.login(usuario.getEmail(), usuario.getSenha());
+  public Usuario login(String email, String senha){
+    return dao.login(email, senha);
   }
 
   public void atualizarUsuario(Usuario usuario){

@@ -25,7 +25,6 @@ public class UsuarioDAO {
             PreparedStatement psUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
 
             psUsuario.setString(1, usuario.getNome());
-            psUsuario.setString(2, usuario.getCpf());
             psUsuario.setString(3, usuario.getEmail());
             psUsuario.setString(4, usuario.getSenha());
             psUsuario.setInt(5, usuario.getIdade());
@@ -97,7 +96,6 @@ public class UsuarioDAO {
             PreparedStatement psUsuario = con.prepareStatement(sql);
 
             psUsuario.setString(1, usuario.getNome());
-            psUsuario.setString(2, usuario.getCpf());
             psUsuario.setString(3, usuario.getEmail());
             psUsuario.setInt(4, usuario.getIdade());
             psUsuario.setString(5, usuario.getObjetivo());

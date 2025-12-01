@@ -32,7 +32,7 @@ public class MusicaDAO {
             for( Musica musica : cantor.getMusicas()){
                 psMusica.setString(1, musica.getNome());
                 psMusica.setDouble(2, musica.getDificuldade());
-                psMusica.setTime(3, musica.getDuracao());
+                psMusica.setString(3, musica.getDuracao());
 
 
 
@@ -127,14 +127,12 @@ public class MusicaDAO {
                 Musica musica = new Musica();
                 musica.setMusicaID(rs.getInt("idmusica"));
                 musica.setNome(rs.getString("nome"));
-                musica.setDuracao(rs.getTime("duracao"));
+                musica.setDuracao(rs.getString("duracao"));
                 musica.setDificuldade(rs.getDouble("dificuldade"));
 
                 musica.setBandas(listarBandasPorMusica(musica.getMusicaID()));
                 musica.setEstilos(listarEstilosPorMusica(musica.getMusicaID()));
                 musica.setInstrumentos(listarInstrumentosPorMusica(musica.getMusicaID()));
-                
-                musica.setLetra(rs.getString("letra"));
 
                 lista.add(musica);
             }
@@ -151,7 +149,7 @@ public class MusicaDAO {
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, musica.getNome());
-            ps.setTime(2, musica.getDuracao());
+            ps.setString(2, musica.getDuracao());
             ps.setDouble(3, musica.getDificuldade());
             ps.setString(4, musica.getLetra());
             ps.setInt(5, musica.getMusicaID());
@@ -349,5 +347,40 @@ public class MusicaDAO {
 
         return lista;
     }
+
+    public List<Musica> listarMusicasPorBanda(int idBanda) {
+    List<Musica> lista = new ArrayList<>();
+
+    String sql = "SELECT m.* FROM musica m " +
+                 "JOIN banda_has_musica bm ON m.idmusica = bm.musica_idmusica " +
+                 "WHERE bm.banda_idbanda = ?";
+
+    try {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, idBanda);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Musica musica = new Musica();
+            musica.setMusicaID(rs.getInt("idmusica"));
+            musica.setNome(rs.getString("nome"));
+            musica.setDuracao(rs.getString("duracao"));
+            musica.setDificuldade(rs.getDouble("dificuldade"));
+            musica.setLetra(rs.getString("letra"));
+
+            // se quiser trazer as relações também
+            musica.setEstilos(listarEstilosPorMusica(musica.getMusicaID()));
+            musica.setInstrumentos(listarInstrumentosPorMusica(musica.getMusicaID()));
+            musica.setBandas(listarBandasPorMusica(musica.getMusicaID()));
+
+            lista.add(musica);
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao listar músicas da banda", e);
+    }
+
+    return lista;
+}
+
 
 }
