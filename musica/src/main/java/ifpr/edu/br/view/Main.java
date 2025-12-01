@@ -338,8 +338,10 @@ public class Main {
             } else if (opcao == 2) {
                 Usuario u = fazerLogin();
                 if (u != null) {
-                    menuUsuario(u);
-                    limparBuffer();
+                    while (true) {
+                        menuUsuario(u);
+                        limparBuffer();
+                    }
                 }
             }
         }
