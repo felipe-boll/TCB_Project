@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ifpr.edu.br.model.Estilo;
-import ifpr.edu.br.model.Musica;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,29 +16,6 @@ public class EstiloDAO {
 
     public EstiloDAO(){
         this.con = ConnectionFactory.getConnection();
-    }
-
-    public void salvarEstiloHasMusica(Musica musica){
-        String sqlEstilo = "INSERT INTO estilo_has_musica(estilo_idestilo, musica_idmusica) VALUES(?, ?)";
-
-        try {
-            PreparedStatement psEstilo = con.prepareStatement(sqlEstilo, Statement.RETURN_GENERATED_KEYS);
-
-            for(Estilo estilo : musica.getEstilos()){
-                psEstilo.setInt(1, estilo.getEstiloID());
-                psEstilo.setInt(2, musica.getMusicaID());
-
-                psEstilo.executeUpdate();
-
-                ResultSet rs = psEstilo.getGeneratedKeys();
-                int idEstilo = 0;
-                if (rs.next()) idEstilo = rs.getInt(1);
-                estilo.setEstiloID(idEstilo);
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     public void salvarEstilo(Estilo estilo){
@@ -82,6 +57,21 @@ public class EstiloDAO {
             throw new RuntimeException("Erro ao listar estilos");
         }
         return lista;
+    }
+
+    public void atualizarEstilos(Estilo estilo){
+        String sql = "UPDATE estilo SET nome = ? WHERE idestilo = ?";
+
+        try{
+            PreparedStatement psEstilo = con.prepareStatement(sql);
+
+            psEstilo.setString(1, estilo.getNome());
+            psEstilo.setInt(2, estilo.getEstiloID());
+
+            psEstilo.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao atualizar o estilo");
+        }
     }
 
     public void deletarEstilo(int idEstilo){

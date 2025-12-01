@@ -1,6 +1,5 @@
 package ifpr.edu.br.model.dao;
 
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
@@ -10,7 +9,6 @@ import java.sql.SQLException;
 
 import ifpr.edu.br.model.Agencia;
 import ifpr.edu.br.model.Banda;
-import ifpr.edu.br.model.Musica;
 
 public class BandaDAO {
 
@@ -20,38 +18,14 @@ public class BandaDAO {
         this.con = ConnectionFactory.getConnection();
     }
 
-    public void salvarBandaHasMusica(Musica musica){
-        String sqlBanda = "INSERT INTO banda_has_musica(banda_idbanda, musica_idbanda) VALUES(?, ?)";
-
-        try {
-            PreparedStatement psBanda = con.prepareStatement(sqlBanda, Statement.RETURN_GENERATED_KEYS);
-
-            for(Banda banda : musica.getBandas()){
-                psBanda.setInt(1, banda.getBandaID());
-                psBanda.setInt(2, musica.getMusicaID());
-
-                psBanda.executeUpdate();
-
-                ResultSet rs = psBanda.getGeneratedKeys();
-                int idBanda = 0;
-                if(rs.next()) idBanda = rs.getInt(1);
-                banda.setBandaID(idBanda);
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
-
-    public void salvarBanda(Banda banda, Agencia agencia){
+    public void salvarBanda(Banda banda){
         String sqlBanda = "INSERT INTO banda(nome, agencia_idagencia) VALUES(?, ?)";
 
         try {
             PreparedStatement psBanda = con.prepareStatement(sqlBanda);
 
             psBanda.setString(1, banda.getNome());
-            psBanda.setInt(2, agencia.getAgenciaID());
+            psBanda.setInt(2, banda.getAgenciaID().getAgenciaID());
 
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao salvar a banda");

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ifpr.edu.br.model.Instrumento;
-import ifpr.edu.br.model.Musica;
 
 public class InstrumentoDAO {
 
@@ -16,30 +15,6 @@ public class InstrumentoDAO {
 
     public InstrumentoDAO(){
         this.con = ConnectionFactory.getConnection();
-    }
-
-    public void salvarInstrumentoHasMusica(Musica musica){
-        String sqlInstrumento = "INSERT INTO musica_has_instrumento(musica_idmusica, instrumento_idinstrumento) VALUES(?, ?)";
-
-        try{
-            PreparedStatement psInstrumento = con.prepareStatement(sqlInstrumento);
-
-            for(Instrumento instrumento : musica.getInstrumentos()){
-                psInstrumento.setInt(1, musica.getMusicaID());
-                psInstrumento.setInt(2, instrumento.getInstrumentoID());
-
-                psInstrumento.executeUpdate();
-
-                ResultSet rs = psInstrumento.getGeneratedKeys();
-                int idInstrumento = 0;
-                if(rs.next()) idInstrumento = rs.getInt(1);
-                instrumento.setInstrumentoID(idInstrumento);
-            }
-
-        } catch(SQLException e){
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     public void salvarInstrumento(Instrumento instrumento){
@@ -74,13 +49,27 @@ public class InstrumentoDAO {
                 lista.add(instrumento);
             }
         } catch(SQLException e){
-            throw new RuntimeException("Erro ao listar os estilos");
+            throw new RuntimeException("Erro ao listar os instrumentos");
         }
 
         return lista;
     }
 
-    public void deletarEstilo(int idInstrumento){
+    public void atualizarInstrumentos(Instrumento instrumento){
+        String sql = "UPDATE instrumento SET nome = ?, descricao = ? WHERE idinstrumento = ?";
+
+        try{
+            PreparedStatement psIntrumento = con.prepareStatement(sql);
+
+            psIntrumento.setString(1, instrumento.getNome());
+            psIntrumento.setString(2, instrumento.getDescricao());
+            psIntrumento.setInt(3, instrumento.getInstrumentoID());
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao atualizar o instrumento");
+        }
+    }
+
+    public void deletarInstrumento(int idInstrumento){
         String sql = "DELETE FROM instrumento WHERE idinstrumento = ?";
 
         try{

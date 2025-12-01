@@ -13,6 +13,7 @@ import ifpr.edu.br.model.Cantor;
 import ifpr.edu.br.model.Estilo;
 import ifpr.edu.br.model.Instrumento;
 import ifpr.edu.br.model.Musica;
+import ifpr.edu.br.model.Usuario;
 
 public class MusicaDAO {
 
@@ -28,7 +29,7 @@ public class MusicaDAO {
         try{
             PreparedStatement psMusica = con.prepareStatement(sqlMusica, Statement.RETURN_GENERATED_KEYS);
             
-            for(Musica musica : cantor.getMusicas()){
+            for( Musica musica : cantor.getMusicas()){
                 psMusica.setString(1, musica.getNome());
                 psMusica.setDouble(2, musica.getDificuldade());
                 psMusica.setTime(3, musica.getDuracao());
@@ -46,6 +47,70 @@ public class MusicaDAO {
             }
         } catch(SQLException e){
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void salvarEstiloHasMusica(Musica musica){
+        String sql = "INSERT INTO estilo_has_musica(estilo_idestilo, musica_idmusica) VALUES(?, ?)";
+
+        try (PreparedStatement psEstilo = con.prepareStatement(sql)) {
+
+        for(Estilo estilo : musica.getEstilos()){
+            psEstilo.setInt(1, estilo.getEstiloID());
+            psEstilo.setInt(2, musica.getMusicaID());
+            psEstilo.executeUpdate();
+        }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void salvarBandaHasMusica(Musica musica){
+        String sql = "INSERT INTO banda_has_musica(banda_idbanda, musica_idmusica) VALUES(?, ?)";
+
+        try (PreparedStatement psBanda = con.prepareStatement(sql)) {
+
+            for(Banda banda : musica.getBandas()){
+                psBanda.setInt(1, banda.getBandaID());
+                psBanda.setInt(2, musica.getMusicaID());
+                psBanda.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void salvarInstrumentoHasMusica(Musica musica){
+        String sql = "INSERT INTO musica_has_instrumento(musica_idmusica, instrumento_idinstrumento) VALUES(?, ?)";
+
+        try (PreparedStatement psInstrumento = con.prepareStatement(sql)) {
+
+            for(Instrumento instrumento : musica.getInstrumentos()){
+                psInstrumento.setInt(1, musica.getMusicaID());
+                psInstrumento.setInt(2, instrumento.getInstrumentoID());
+                psInstrumento.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+        public void salvarUsuarioHasMusica(Musica musica){
+        String sql = "INSERT INTO usuario_has_musica(usuario_idusuario, musica_idmusica) VALUES(?, ?)";
+
+        try (PreparedStatement psUsuario = con.prepareStatement(sql)) {
+
+            for(Usuario usuario : musica.getUsuarios()){
+                psUsuario.setInt(1, usuario.getUsuarioID());
+                psUsuario.setInt(2, musica.getMusicaID());
+                psUsuario.executeUpdate();
+            }
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -80,72 +145,116 @@ public class MusicaDAO {
         return lista;
     }
 
-    public void atualizarMusica( Musica musica, boolean atualizarInstrumentos, boolean atualizarBandas, boolean atualizarEstilos) {
-        String sql = "UPDATE musica SET nome = ?, duracao = ?, dificuldade a= ?, letra = ? WHERE idmusica = ?";
+    public void atualizarMusica(Musica musica) {
+        String sql = "UPDATE musica SET nome = ?, duracao = ?, dificuldade = ?, letra = ? WHERE idmusica = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, musica.getNome());
+            ps.setTime(2, musica.getDuracao());
+            ps.setDouble(3, musica.getDificuldade());
+            ps.setString(4, musica.getLetra());
+            ps.setInt(5, musica.getMusicaID());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void atualizarBandasDaMusica(Musica musica) {
+
+        String deleteSQL = "DELETE FROM banda_has_musica WHERE musica_idmusica = ?";
+        String insertSQL = "INSERT INTO banda_has_musica(banda_idbanda, musica_idmusica) VALUES (?, ?)";
 
         try {
-            PreparedStatement psMusica = con.prepareStatement(sql);
+            PreparedStatement delete = con.prepareStatement(deleteSQL);
+            delete.setInt(1, musica.getMusicaID());
+            delete.executeUpdate();
 
-            psMusica.setString(1, musica.getNome());
-            psMusica.setTime(2, musica.getDuracao());
-            psMusica.setDouble(3, musica.getDificuldade());
-            psMusica.setString(4, musica.getLetra());
-            psMusica.setInt(5, musica.getMusicaID());
+            PreparedStatement insert = con.prepareStatement(insertSQL);
 
-            psMusica.executeUpdate();
-
-            if (atualizarInstrumentos) {
-                String deleteInstr = "DELETE FROM musica_has_instrumento WHERE musica_idmusica = ?";
-                PreparedStatement psDel = con.prepareStatement(deleteInstr);
-                psDel.setInt(1, musica.getMusicaID());
-                psDel.executeUpdate();
-
-                String insertInstr = "INSERT INTO musica_has_instrumento(musica_idmusica, instrumento_idinstrumento) VALUES (?, ?)";
-                PreparedStatement psIns = con.prepareStatement(insertInstr);
-
-                for (Instrumento i : musica.getInstrumentos()) {
-                    psIns.setInt(1, musica.getMusicaID());
-                    psIns.setInt(2, i.getInstrumentoID());
-                    psIns.executeUpdate();
-                }
-            }
-
-            if (atualizarBandas) {
-                String deleteBandas = "DELETE FROM musica_has_banda WHERE musica_idmusica = ?";
-                PreparedStatement psDel = con.prepareStatement(deleteBandas);
-                psDel.setInt(1, musica.getMusicaID());
-                psDel.executeUpdate();
-
-                String insertBandas = "INSERT INTO musica_has_banda(musica_idmusica, banda_idbanda) VALUES (?, ?)";
-                PreparedStatement psIns = con.prepareStatement(insertBandas);
-
-                for (Banda b : musica.getBandas()) {
-                    psIns.setInt(1, musica.getMusicaID());
-                    psIns.setInt(2, b.getBandaID());
-                    psIns.executeUpdate();
-                }
-            }
-
-            if (atualizarEstilos) {
-                String deleteEstilos = "DELETE FROM musica_has_estilo WHERE musica_idmusica = ?";
-                PreparedStatement psDel = con.prepareStatement(deleteEstilos);
-                psDel.setInt(1, musica.getMusicaID());
-                psDel.executeUpdate();
-
-                String insertEstilos = "INSERT INTO musica_has_estilo(musica_idmusica, estilo_idestilo) VALUES (?, ?)";
-                PreparedStatement psIns = con.prepareStatement(insertEstilos);
-
-                for (Estilo e : musica.getEstilos()) {
-                    psIns.setInt(1, musica.getMusicaID());
-                    psIns.setInt(2, e.getEstiloID());
-                    psIns.executeUpdate();
-                }
+            for (Banda banda : musica.getBandas()) {
+                insert.setInt(1, banda.getBandaID());
+                insert.setInt(2, musica.getMusicaID());
+                insert.executeUpdate();
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao atualizar música");
+            e.printStackTrace();
         }
     }
+
+    public void atualizarEstilosDaMusica(Musica musica) {
+
+        String deleteSQL = "DELETE FROM estilo_has_musica WHERE musica_idmusica = ?";
+        String insertSQL = "INSERT INTO estilo_has_musica(estilo_idestilo, musica_idmusica) VALUES (?, ?)";
+
+        try {
+            PreparedStatement delete = con.prepareStatement(deleteSQL);
+            delete.setInt(1, musica.getMusicaID());
+            delete.executeUpdate();
+
+            PreparedStatement insert = con.prepareStatement(insertSQL);
+
+            for (Estilo estilo : musica.getEstilos()) {
+                insert.setInt(1, estilo.getEstiloID());
+                insert.setInt(2, musica.getMusicaID());
+                insert.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void atualizarInstrumentosDaMusica(Musica musica) {
+
+        String deleteSQL = "DELETE FROM musica_has_instrumento WHERE musica_idmusica = ?";
+        String insertSQL = "INSERT INTO musica_has_instrumento(musica_idmusica, instrumento_idinstrumento) VALUES (?, ?)";
+
+        try {
+            PreparedStatement delete = con.prepareStatement(deleteSQL);
+            delete.setInt(1, musica.getMusicaID());
+            delete.executeUpdate();
+
+            PreparedStatement insert = con.prepareStatement(insertSQL);
+
+            for (Instrumento ins : musica.getInstrumentos()) {
+                insert.setInt(1, musica.getMusicaID());
+                insert.setInt(2, ins.getInstrumentoID());
+                insert.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void atualizarUsuariosDaMusica(Musica musica) {
+
+        String deleteSQL = "DELETE FROM usuario_has_musica WHERE musica_idmusica = ?";
+        String insertSQL = "INSERT INTO usuario_has_musica(usuario_idusuario, musica_idmusica) VALUES (?, ?)";
+
+        try {
+            PreparedStatement delete = con.prepareStatement(deleteSQL);
+            delete.setInt(1, musica.getMusicaID());
+            delete.executeUpdate();
+
+            PreparedStatement insert = con.prepareStatement(insertSQL);
+
+            for (Usuario user : musica.getUsuarios()) {
+                insert.setInt(1, user.getUsuarioID());
+                insert.setInt(2, musica.getMusicaID());
+                insert.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void deletarMusica(int idMusica){
         String sql = "DELETE FROM musica WHERE idmusica";

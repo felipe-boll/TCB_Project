@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import ifpr.edu.br.model.Musica;
 import ifpr.edu.br.model.Usuario;
 
 public class UsuarioDAO {
@@ -19,36 +18,18 @@ public class UsuarioDAO {
         this.con = ConnectionFactory.getConnection();
     }
 
-    public void salvarUsuarioHasMusica(Musica musica){
-        String sqlUsuario = "INSERT INTO usuario_has_musica(usuario_idusuario, musica_idmusica) VALUES(?, ?)";
+    public void cadastrarUsuario(Usuario usuario){
+        String sqlUsuario = "INSERT INTO usuario(nome, cpf, email, senha, idade, objetivo) VALUES(?, ?, ?, ?, ?, ?,)";
 
         try{
             PreparedStatement psUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
 
-            for(Usuario usuario : musica.getUsuarios()){
-                psUsuario.setInt(1, usuario.getUsuarioID());
-                psUsuario.setInt(2, musica.getMusicaID());
-
-                psUsuario.executeUpdate();
-
-                ResultSet rs = psUsuario.getGeneratedKeys();
-                int idUsuario = 0;
-                if(rs.next()) idUsuario = rs.getInt(1);
-                usuario.setUsuarioID(idUsuario);
-            }
-        } catch(SQLException e){
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public void salvarUsuario(Usuario usuario){
-        String sqlUsuario = "INSERT INTO usuario(objetivo) VALUES(?)";
-
-        try{
-            PreparedStatement psUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
-
-            psUsuario.setString(1, usuario.getObjetivo());
+            psUsuario.setString(1, usuario.getNome());
+            psUsuario.setString(2, usuario.getCpf());
+            psUsuario.setString(3, usuario.getEmail());
+            psUsuario.setString(4, usuario.getSenha());
+            psUsuario.setInt(5, usuario.getIdade());
+            psUsuario.setString(6, usuario.getObjetivo());
 
             psUsuario.executeUpdate();
 
@@ -57,8 +38,32 @@ public class UsuarioDAO {
             if(rs.next()) idUsuario = rs.getInt(1);
             usuario.setUsuarioID(idUsuario);
         } catch(SQLException e){
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao cadastrar usuario");
+        }
+    }
+
+    public Usuario login(String email, String senha){
+        String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
+        
+        try{
+            PreparedStatement psUsuario = con.prepareStatement(sql);
+
+            psUsuario.setString(1, email);
+            psUsuario.setString(2, senha);
+
+            ResultSet rs = psUsuario.executeQuery();
+
+            if (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setUsuarioID(rs.getInt("idusuario"));
+                usuario.setNome(rs.getString("nome"));
+                usuario.setEmail(rs.getString("email"));
+                return usuario;
+            }
+
+            return null;
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao fazer login");
         }
     }
 
@@ -98,7 +103,7 @@ public class UsuarioDAO {
             psUsuario.setString(5, usuario.getObjetivo());
             psUsuario.setInt(6, usuario.getUsuarioID());
         } catch(SQLException e){
-            throw new RuntimeException("Erro ao atualizar o usuario");
+            throw new RuntimeException("Erro ao atualizar o usuario", e);
         }
     }
 
@@ -111,7 +116,7 @@ public class UsuarioDAO {
 
             psUsuario.executeUpdate();
         } catch(SQLException e){
-            throw new RuntimeException("Erro ao deletar o usuario");
+            throw new RuntimeException("Erro ao deletar o usuario", e);
         }
     }
 

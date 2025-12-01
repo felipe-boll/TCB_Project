@@ -4,6 +4,7 @@ public class Usuario {
     private String nome;
     private String cpf;
     private String email;
+    private String senha;
     private int idade;
     private String objetivo;
     private int usuarioID;
@@ -58,5 +59,13 @@ public class Usuario {
 
     public void setIdade(int idade) {
         this.idade = idade;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }
