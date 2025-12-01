@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`musica` (
   `idmusica` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(200) NOT NULL,
   `dificuldade` DOUBLE NOT NULL,
-  `duracao` TIME NOT NULL,
+  `duracao` VARCHAR(10) NOT NULL,
   `letra` TEXT NOT NULL,
   PRIMARY KEY (`idmusica`))
 ENGINE = InnoDB
@@ -77,20 +77,6 @@ DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`pessoa`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`pessoa` (
-  `idpessoa` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(200) NOT NULL,
-  `cpf` VARCHAR(16) NOT NULL,
-  `email` VARCHAR(200) NOT NULL,
-  `idade` INT NOT NULL,
-  PRIMARY KEY (`idpessoa`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`cantor`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`cantor` (
@@ -98,14 +84,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`cantor` (
   `pessoa_idpessoa` INT NOT NULL,
   `banda_idbanda` INT NOT NULL,
   PRIMARY KEY (`idcantor`),
-  INDEX `fk_cantor_pessoa1_idx` (`pessoa_idpessoa` ASC) VISIBLE,
   INDEX `fk_cantor_banda1_idx` (`banda_idbanda` ASC) VISIBLE,
   CONSTRAINT `fk_cantor_banda1`
     FOREIGN KEY (`banda_idbanda`)
-    REFERENCES `mydb`.`banda` (`idbanda`),
-  CONSTRAINT `fk_cantor_pessoa1`
-    FOREIGN KEY (`pessoa_idpessoa`)
-    REFERENCES `mydb`.`pessoa` (`idpessoa`))
+    REFERENCES `mydb`.`banda` (`idbanda`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 
@@ -178,13 +160,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
   `pessoa_idpessoa` INT NOT NULL,
   `objetivo` VARCHAR(450) NOT NULL,
-  PRIMARY KEY (`idusuario`),
-  INDEX `fk_usuario_pessoa1_idx` (`pessoa_idpessoa` ASC) VISIBLE,
-  CONSTRAINT `fk_usuario_pessoa1`
-    FOREIGN KEY (`pessoa_idpessoa`)
-    REFERENCES `mydb`.`pessoa` (`idpessoa`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`idusuario`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
 

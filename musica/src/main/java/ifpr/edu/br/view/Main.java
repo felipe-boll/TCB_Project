@@ -81,7 +81,7 @@ public class Main {
         System.out.print("Idade: ");
         u.setIdade(tecladoScanner.nextInt());
         System.out.print("Objetivo: ");
-        u.setObjetivo(tecladoScanner.nextLine());
+        u.setObjetivo(tecladoScanner.next());
 
         controllerUsuario.cadastrarUsuario(u);
         limparTela();
@@ -117,7 +117,7 @@ public class Main {
         limparTela();
         System.out.printf("Bem-vindo(a), %s!", u.getNome());
         espera();
-        System.out.printf("\nOque deseja fazer?\n1.Listar Musicas\n2.Listar Bandas\n3.Acessar uma musica\n4.Acessar uma banda\n5.Mudar Senha\n 6.Logout");
+        System.out.printf("\nOque deseja fazer?\n1.Listar Musicas\n2.Listar Bandas\n3.Acessar uma musica\n4.Acessar uma banda\n5.Mudar Senha\n6.Mudar objetivo\n7.Logout\n");
         int opcao = tecladoScanner.nextInt();
         switch (opcao) {
             case 1:
@@ -298,7 +298,7 @@ public class Main {
                 limparTela();
                 System.out.print("Digite sua nova senha: ");
                 limparBuffer();
-                String novaSenha = tecladoScanner.nextLine();
+                String novaSenha = tecladoScanner.next();
                 u.setSenha(novaSenha);
                 controllerUsuario.atualizarUsuario(u);
                 limparTela();
@@ -306,6 +306,17 @@ public class Main {
                 espera();
                 break;
             case 6:
+                limparTela();
+                System.out.printf("Digite seu novo objetivo: ");
+                limparBuffer();
+                String novoObjetivo = tecladoScanner.next();
+                u.setObjetivo(novoObjetivo);
+                controllerUsuario.atualizarUsuario(u);
+                limparTela();
+                System.out.println("Objetivo atualizado com sucesso");
+                espera();
+                break;
+            case 7:
                 limparTela();
                 System.out.println("Fazendo logout");
                 espera();
@@ -323,10 +334,12 @@ public class Main {
             int opcao = tecladoScanner.nextInt();
             if (opcao == 1) {
                 criarConta();
+                limparBuffer();
             } else if (opcao == 2) {
                 Usuario u = fazerLogin();
                 if (u != null) {
                     menuUsuario(u);
+                    limparBuffer();
                 }
             }
         }

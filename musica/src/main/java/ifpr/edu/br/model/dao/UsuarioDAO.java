@@ -19,16 +19,16 @@ public class UsuarioDAO {
     }
 
     public void cadastrarUsuario(Usuario usuario){
-        String sqlUsuario = "INSERT INTO usuario(nome, cpf, email, senha, idade, objetivo) VALUES(?, ?, ?, ?, ?, ?,)";
+        String sqlUsuario = "INSERT INTO usuario(nome, email, senha, idade, objetivo) VALUES(?, ?, ?, ?, ?)";
 
         try{
             PreparedStatement psUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS);
 
             psUsuario.setString(1, usuario.getNome());
-            psUsuario.setString(3, usuario.getEmail());
-            psUsuario.setString(4, usuario.getSenha());
-            psUsuario.setInt(5, usuario.getIdade());
-            psUsuario.setString(6, usuario.getObjetivo());
+            psUsuario.setString(2, usuario.getEmail());
+            psUsuario.setString(3, usuario.getSenha());
+            psUsuario.setInt(4, usuario.getIdade());
+            psUsuario.setString(5, usuario.getObjetivo());
 
             psUsuario.executeUpdate();
 
@@ -96,10 +96,10 @@ public class UsuarioDAO {
             PreparedStatement psUsuario = con.prepareStatement(sql);
 
             psUsuario.setString(1, usuario.getNome());
-            psUsuario.setString(3, usuario.getEmail());
-            psUsuario.setInt(4, usuario.getIdade());
-            psUsuario.setString(5, usuario.getObjetivo());
-            psUsuario.setInt(6, usuario.getUsuarioID());
+            psUsuario.setString(2, usuario.getEmail());
+            psUsuario.setInt(3, usuario.getIdade());
+            psUsuario.setString(4, usuario.getObjetivo());
+            psUsuario.setInt(5, usuario.getUsuarioID());
         } catch(SQLException e){
             throw new RuntimeException("Erro ao atualizar o usuario", e);
         }
