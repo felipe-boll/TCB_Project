@@ -81,8 +81,11 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`cantor` (
   `idcantor` INT NOT NULL AUTO_INCREMENT,
-  `pessoa_idpessoa` INT NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
   `banda_idbanda` INT NOT NULL,
+  `cpf` VARCHAR(15) NOT NULL,
+  `email` VARCHAR(250) NOT NULL,
+  `idade` INT NOT NULL,
   PRIMARY KEY (`idcantor`),
   INDEX `fk_cantor_banda1_idx` (`banda_idbanda` ASC) VISIBLE,
   CONSTRAINT `fk_cantor_banda1`
@@ -158,8 +161,11 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
-  `pessoa_idpessoa` INT NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
   `objetivo` VARCHAR(450) NOT NULL,
+  `email` VARCHAR(250) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  `idade` INT NOT NULL,
   PRIMARY KEY (`idusuario`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;

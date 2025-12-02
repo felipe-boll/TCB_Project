@@ -34,10 +34,13 @@ public class UsuarioDAO {
 
             ResultSet rs = psUsuario.getGeneratedKeys();
             int idUsuario = 0;
-            if(rs.next()) idUsuario = rs.getInt(1);
+            if(rs.next()){
+                idUsuario = rs.getInt(1);
+            }
+
             usuario.setUsuarioID(idUsuario);
         } catch(SQLException e){
-            throw new RuntimeException("Erro ao cadastrar usuario");
+            throw new RuntimeException("Erro ao cadastrar usuario: " + e.getMessage());
         }
     }
 

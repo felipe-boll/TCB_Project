@@ -87,7 +87,8 @@ public class Main {
             System.out.print("Idade: ");
             u.setIdade(tecladoScanner.nextInt());
             System.out.print("Objetivo: ");
-            u.setObjetivo(tecladoScanner.next());
+            limparBuffer();
+            u.setObjetivo(tecladoScanner.nextLine());
 
             controllerUsuario.cadastrarUsuario(u);
             limparTela();
@@ -309,12 +310,13 @@ public class Main {
                             cantores += banda.getCantores().get(i).getNome() + ", ";
                         }
                     }
-                    System.out.printf("ID: %d | Agencia: %d | Nome: %s | Cantores %s", banda.getBandaID(), banda.getAgenciaID(), banda.getNome(), cantores);
+                    System.out.printf("ID: %d | Agencia: %d | Nome: %s | Cantores: %s\n", banda.getBandaID(), banda.getAgenciaID(), banda.getNome(), cantores);
+                    cantores = "";
                 }
                 System.out.println("Digite o ID da banda que deseja acesar: ");
                 List<Banda> bandass = controllerBanda.listarBandas();
                 for(Banda banda : bandass){
-                    System.out.printf("ID: %d | Nome: %s", banda.getBandaID(), banda.getNome());
+                    System.out.printf("ID: %d | Nome: %s\n", banda.getBandaID(), banda.getNome());
                 }
                 int idBanda = tecladoScanner.nextInt();
                 Banda bandaSelecionada = null;
@@ -325,7 +327,14 @@ public class Main {
                     }
                 }
                 limparTela();
-                System.out.printf("====%s====", bandaSelecionada.getNome());
+                System.out.printf("====%s====\n", bandaSelecionada.getNome());
+                for(int i = 0; i < bandaSelecionada.getCantores().size(); i++){
+                    if (i == bandaSelecionada.getCantores().size() - 1) {
+                        cantores += bandaSelecionada.getCantores().get(i).getNome();
+                    } else{
+                        cantores += bandaSelecionada.getCantores().get(i).getNome() + ", ";
+                    }
+                }
                 System.out.printf("Agencia: %d\nIntegrantes: %s\n", bandaSelecionada.getAgenciaID(), cantores);
                 System.out.println("Digite o ID da musica que deseja acessar: ");
                 List<Musica> musicass = controllerMusica.listarMusicas();
