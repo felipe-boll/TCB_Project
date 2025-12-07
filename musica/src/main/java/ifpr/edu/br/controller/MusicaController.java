@@ -4,6 +4,8 @@ import java.util.List;
 
 import ifpr.edu.br.model.Banda;
 import ifpr.edu.br.model.Cantor;
+import ifpr.edu.br.model.Estilo;
+import ifpr.edu.br.model.Instrumento;
 import ifpr.edu.br.model.Musica;
 import ifpr.edu.br.model.dao.MusicaDAO;
 
@@ -66,7 +68,15 @@ public class MusicaController {
   }
 
   public List<Banda> listarBandasPorMusica(int idMusica){
-    return dao.listarBandasPorMusica();
+    return dao.listarBandasPorMusica(idMusica);
+  }
+
+  public List<Instrumento> listarInstrumentosPorMusica(int idMusica){
+    return dao.listarInstrumentosPorMusica(idMusica);
+  }
+
+  public List<Estilo> listarEstilosPorMusica(int idMusica){
+    return dao.listarEstilosPorMusica(idMusica);
   }
 
   public Musica selectMusica(int idMusica){
@@ -79,6 +89,22 @@ public class MusicaController {
 
   public void deletarBandaDaMusica(int idBanda, int idMusica){
     dao.deletarBandaDaMusica(idBanda, idMusica);
+  }
+
+  public void adicionarEstiloNaMusica(int idEstilo, int idBanda){
+    dao.adicionarEstiloNaMusica(idEstilo, idBanda);
+  }
+
+  public void deletarEstiloDaMusica(int idEstilo, int idBanda){
+    dao.deletarEstiloDaMusica(idEstilo, idBanda);
+  }
+
+  public void adicionarInstrumentoNaMusica(int idInstrumento, int idBanda){
+    dao.adicionarInstrumentoNaMusica(idInstrumento, idBanda);
+  }
+
+  public void deletarInstrumentoDaMusica(int idInstrumento, int idBanda){
+    dao.deletarInstrumentoDaMusica(idInstrumento, idBanda);
   }
 
 }

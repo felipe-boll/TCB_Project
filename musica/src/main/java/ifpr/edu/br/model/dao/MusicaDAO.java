@@ -228,49 +228,63 @@ public class MusicaDAO {
         }
     }
 
-    public void atualizarEstilosDaMusica(Musica musica) {
+    public void adicionarEstiloNaMusica(int idEstilo, int idMusica){
+        String sql = "INSERT INTO estilo_has_musica(estilo_idestilo, musica_idmusica) VALUES (?, ?)";
 
-        String deleteSQL = "DELETE FROM estilo_has_musica WHERE musica_idmusica = ?";
-        String insertSQL = "INSERT INTO estilo_has_musica(estilo_idestilo, musica_idmusica) VALUES (?, ?)";
+        try{
+            PreparedStatement psMusica = con.prepareStatement(sql);
 
-        try {
-            PreparedStatement delete = con.prepareStatement(deleteSQL);
-            delete.setInt(1, musica.getMusicaID());
-            delete.executeUpdate();
+            psMusica.setInt(1, idEstilo);
+            psMusica.setInt(2, idMusica);
 
-            PreparedStatement insert = con.prepareStatement(insertSQL);
-
-            for (Estilo estilo : musica.getEstilos()) {
-                insert.setInt(1, estilo.getEstiloID());
-                insert.setInt(2, musica.getMusicaID());
-                insert.executeUpdate();
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            psMusica.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Errp ao inserir novo estilo a banda");
         }
     }
 
-    public void atualizarInstrumentosDaMusica(Musica musica) {
+    public void deletarEstiloDaMusica(int idEstilo, int idMusica){
+        String sql = "DELETE FROM estilo_has_musica(estilo_idestilo, musica_idmusica) VALUES (?, ?)";
 
-        String deleteSQL = "DELETE FROM musica_has_instrumento WHERE musica_idmusica = ?";
-        String insertSQL = "INSERT INTO musica_has_instrumento(musica_idmusica, instrumento_idinstrumento) VALUES (?, ?)";
+        try{
+            PreparedStatement psMusica = con.prepareStatement(sql);
 
-        try {
-            PreparedStatement delete = con.prepareStatement(deleteSQL);
-            delete.setInt(1, musica.getMusicaID());
-            delete.executeUpdate();
+            psMusica.setInt(1, idEstilo);
+            psMusica.setInt(2, idMusica);
 
-            PreparedStatement insert = con.prepareStatement(insertSQL);
+            psMusica.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao deletar estilo da musica");
+        }
+    }
 
-            for (Instrumento ins : musica.getInstrumentos()) {
-                insert.setInt(1, musica.getMusicaID());
-                insert.setInt(2, ins.getInstrumentoID());
-                insert.executeUpdate();
-            }
+    public void adicionarInstrumentoNaMusica(int idInstrumento, int idMusica){
+        String sql = "INSERT INTO instrumento_has_musica(instrumento_idinstrumento, musica_idmusica) VALUES (?, ?)";
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try{
+            PreparedStatement psMusica = con.prepareStatement(sql);
+
+            psMusica.setInt(1, idInstrumento);
+            psMusica.setInt(2, idMusica);
+
+            psMusica.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Errp ao inserir novo estilo a banda");
+        }
+    }
+
+    public void deletarInstrumentoDaMusica(int idInstrumento, int idMusica){
+        String sql = "DELETE FROM instrumento_has_musica(instrumento_idinstrumento, musica_idmusica) VALUES (?, ?)";
+
+        try{
+            PreparedStatement psMusica = con.prepareStatement(sql);
+
+            psMusica.setInt(1, idInstrumento);
+            psMusica.setInt(2, idMusica);
+
+            psMusica.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Errp ao inserir novo estilo a banda");
         }
     }
 
@@ -312,7 +326,7 @@ public class MusicaDAO {
     }
 
 
-    private List<Banda> listarBandasPorMusica(int idMusica) {
+    public List<Banda> listarBandasPorMusica(int idMusica) {
         List<Banda> bandas = new ArrayList<>();
 
         String sql = """
@@ -342,54 +356,64 @@ public class MusicaDAO {
         return bandas;
     }
 
-    private List<Instrumento> listarInstrumentosPorMusica(int idMusica) throws SQLException {
-        List<Instrumento> lista = new ArrayList<>();
+    public List<Instrumento> listarInstrumentosPorMusica(int idMusica) {
+        List<Instrumento> instrumentos = new ArrayList<>();
 
         String sql = """
-            SELECT i.* FROM instrumento i
-            JOIN musica_has_instrumento mhi ON mhi.instrumento_idinstrumento = i.idinstrumento
+            SELECT i.idinstrumento, i.nome
+            FROM instrumento i
+            JOIN musica_has_instrumento mhi ON i.idinstrumento = mhi.instrumento_idinstrumento
             WHERE mhi.musica_idmusica = ?
-        """;
+            """;
 
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, idMusica);
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idMusica);
+            ResultSet rs = ps.executeQuery();
 
-        ResultSet rs = ps.executeQuery();
-        while(rs.next()){
-            Instrumento inst = new Instrumento();
-            inst.setInstrumentoID(rs.getInt("idinstrumento"));
-            inst.setNome(rs.getString("nome"));
-            inst.setDescricao(rs.getString("descricao"));
+            while (rs.next()) {
+                Instrumento instrumento = new Instrumento();
+                instrumento.setInstrumentoID(rs.getInt("idinstrumento"));
+                instrumento.setNome(rs.getString("nome"));
 
-            lista.add(inst);
+                instrumentos.add(instrumento);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        return lista;
+        return instrumentos;
     }
 
-
-    private List<Estilo> listarEstilosPorMusica(int idMusica) throws SQLException {
-        List<Estilo> lista = new ArrayList<>();
+    public List<Estilo> listarEstilosPorMusica(int idMusica) {
+        List<Estilo> estilos = new ArrayList<>();
 
         String sql = """
-            SELECT e.* FROM estilo e
-            JOIN musica_has_estilo mhe ON mhe.estilo_idestilo = e.idestilo
+            SELECT e.idestilo, e.nome
+            FROM estilo e
+            JOIN musica_has_estilo mhe ON e.idestilo = mhe.estilo_idestilo
             WHERE mhe.musica_idmusica = ?
-        """;
+            """;
 
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, idMusica);
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idMusica);
+            ResultSet rs = ps.executeQuery();
 
-        ResultSet rs = ps.executeQuery();
-        while(rs.next()){
-            Estilo estilo = new Estilo();
-            estilo.setEstiloID(rs.getInt("idestilo"));
-            estilo.setNome(rs.getString("nome"));
+            while (rs.next()) {
+                Estilo estilo = new Estilo();
+                estilo.setEstiloID(rs.getInt("idestilo"));
+                estilo.setNome(rs.getString("nome"));
 
-            lista.add(estilo);
+                estilos.add(estilo);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
-        return lista;
+        return estilos;
     }
 
     public List<Musica> listarMusicasPorBanda(int idBanda) {
