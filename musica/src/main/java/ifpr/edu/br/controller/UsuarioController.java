@@ -20,8 +20,12 @@ public class UsuarioController {
     return dao.login(email, senha);
   }
 
-  public void atualizarUsuario(Usuario usuario){
-    dao.atualizarUsuario(usuario);
+  public void atualizarSenha(Usuario usuario){
+    dao.atualizarSenha(usuario);
+  }
+
+  public void atualizarObjetivo(Usuario usuario){
+    dao.atualizarObjetivo(usuario);
   }
 
   public void deletarUsuario(Usuario usuario){

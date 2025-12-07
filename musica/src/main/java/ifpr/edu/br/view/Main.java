@@ -1,5 +1,6 @@
 package ifpr.edu.br.view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ import ifpr.edu.br.controller.MusicaController;
 import ifpr.edu.br.controller.UsuarioController;
 import ifpr.edu.br.model.Banda;
 import ifpr.edu.br.model.Cantor;
+import ifpr.edu.br.model.Estilo;
 import ifpr.edu.br.model.Musica;
 import ifpr.edu.br.model.Usuario;
 
@@ -104,10 +106,10 @@ public class Main {
             c.setNome(tecladoScanner.nextLine());
             System.out.print("Email: ");
             c.setEmail(tecladoScanner.nextLine());
-            System.out.printf("CPF: ");
-            c.setCpf(tecladoScanner.nextLine());
-            System.out.printf("Idade: ");
+            System.out.print("Idade: ");
             c.setIdade(tecladoScanner.nextInt());
+            System.out.print("Senha: ");
+            c.setSenha(tecladoScanner.nextLine());
             System.out.print("Ja possui uma banda cadastrada(S/N): ");
             String resposta = tecladoScanner.next().toLowerCase();
             int idBanda;
@@ -143,7 +145,7 @@ public class Main {
         }
     }
 
-    public static Usuario fazerLogin(){
+    public static Usuario fazerLoginUsuario(){
         limparBuffer();
         limparTela();
         System.out.printf("====Login====\n");
@@ -203,9 +205,10 @@ public class Main {
                     }
                     System.out.printf("ID: %d | Nome: %s | Duração: %s | Dificuldade: %.1f | Bandas: %s | Estilos: %s | Instrumentos: %s", musica.getMusicaID(), musica.getNome(), musica.getDuracao(), musica.getDificuldade(), bandas, estilos, instrumentos);
                 }
-                System.out.print("Pressione Enter para continuar...");
                 limparBuffer();
+                System.out.print("Pressione Enter para continuar...\n");
                 tecladoScanner.nextLine();
+                limparBuffer();
                 break;
             case 2:
                 limparTela();
@@ -220,6 +223,7 @@ public class Main {
                     }
                     System.out.printf("ID: %d | Agencia: %d | Nome: %s | Cantores: %s\n", banda.getBandaID(), banda.getAgenciaID(), banda.getNome(), cantores);
                 }
+                limparBuffer();
                 System.out.println("Pressione Enter para continuar ...");
                 tecladoScanner.nextLine();
                 limparBuffer();
@@ -360,9 +364,8 @@ public class Main {
                 limparTela();
                 System.out.print("Digite sua nova senha: ");
                 limparBuffer();
-                String novaSenha = tecladoScanner.next();
-                u.setSenha(novaSenha);
-                controllerUsuario.atualizarUsuario(u);
+                u.setSenha(tecladoScanner.nextLine());
+                controllerUsuario.atualizarSenha(u);
                 limparTela();
                 System.out.println("Senha atualizada com sucesso");
                 espera();
@@ -371,9 +374,9 @@ public class Main {
                 limparTela();
                 System.out.printf("Digite seu novo objetivo: ");
                 limparBuffer();
-                String novoObjetivo = tecladoScanner.next();
+                String novoObjetivo = tecladoScanner.nextLine();
                 u.setObjetivo(novoObjetivo);
-                controllerUsuario.atualizarUsuario(u);
+                controllerUsuario.atualizarObjetivo(u);
                 limparTela();
                 System.out.println("Objetivo atualizado com sucesso");
                 espera();
@@ -390,13 +393,109 @@ public class Main {
         }
     }
 
+    public static Cantor fazerLoginCantor(){
+        limparBuffer();
+        limparTela();
+        System.out.printf("====Login====\n");
+        System.out.print("ID cantor: ");
+        int idcantor = tecladoScanner.nextInt();
+        System.out.print("Senha: ");
+        String senha = tecladoScanner.nextLine();
+
+        Cantor c = controllerCantor.login(idcantor, senha);
+        if (c != null) {
+            limparTela();
+            System.out.println("Login realizado com sucesso");
+            espera();
+            return c;
+        } else{
+            limparTela();
+            System.out.println("Falha no login!");
+            espera();
+            return c;
+        }
+    }
+
+    public static void menuCantor(Cantor c, Musica m, Banda b){
+        while (true) {
+            limparTela();
+            System.out.printf("Bem-vindo(a), %s!", c.getNome());
+            espera();
+            System.out.printf("\nOque deseja fazer?\n1.Listar suas Musicas\n2.Adicionar uma musica nova\n3.Alterar uma musica\n4.Editar banda\n5.Mudar sua senha\n6.Logout");
+            int opcao = tecladoScanner.nextInt();
+            switch (opcao) {
+                case 1:
+                    limparTela();
+                    for(Musica musica : controllerMusica.listarMusicas()){
+                        String bandas = "";
+                        String estilos = "";
+                        String instrumentos = "";
+                        for(int i = 0; i < musica.getBandas().size(); i++){
+                            if (i == musica.getBandas().size() - 1) {
+                                bandas += musica.getBandas().get(i).getNome();
+                            } else{
+                                bandas += musica.getBandas().get(i).getNome() + ", ";
+                            }
+                        }
+                        for(int i = 0; i < musica.getEstilos().size(); i++){
+                            if (i == musica.getEstilos().size() - 1) {
+                            estilos += musica.getEstilos().get(i).getNome();
+                            } else{
+                                estilos += musica.getEstilos().get(i).getNome() + ", ";
+                            }
+                        }
+                        for(int i = 0; i < musica.getInstrumentos().size(); i++){
+                            if (i == musica.getInstrumentos().size() - 1) {
+                                instrumentos += musica.getInstrumentos().get(i).getNome();
+                            } else{
+                                instrumentos += musica.getInstrumentos().get(i).getNome() + ", ";
+                            }
+                        }
+                        System.out.printf("ID: %d | Nome: %s | Duração: %s | Dificuldade: %.1f | Bandas: %s | Estilos: %s | Instrumentos: %s", musica.getMusicaID(), musica.getNome(), musica.getDuracao(), musica.getDificuldade(), bandas, estilos, instrumentos);
+                    }
+                    System.out.print("Pressione Enter para continuar...");
+                    limparBuffer();
+                    tecladoScanner.nextLine();
+                    break;
+                case 2:
+                    limparTela();
+                    System.out.printf("====Nova Musica====\n");
+                    System.out.print("Nome: ");
+                    m.setNome(tecladoScanner.nextLine());
+                    System.out.print("Duração: ");
+                    m.setDuracao(tecladoScanner.nextLine());
+                    System.out.print("Dificuldade (0-5): ");
+                    m.setDificuldade(tecladoScanner.nextDouble());
+                    System.out.print("Letra: ");
+                    m.setLetra(tecladoScanner.nextLine());
+                    System.out.print("Estilos: ");
+                    List<Estilo> es = new ArrayList<>();
+                    int i = 0;
+                    while (true) {
+                        
+
+                        System.out.println("Deseja adicionar mais estilos? (s/n)");
+                        String resposta = tecladoScanner.next().toLowerCase();
+
+                        if (resposta.equals("n")) {
+                            break;
+                        }
+                    }
+                    
+                default:
+                    break;
+            }
+        }
+    }
+
     public static void main(String[] args) {
         iniciarControllers();
 
         while (true) {
             menuInicial();
             int opcao = tecladoScanner.nextInt();
-            if (opcao == 1) {
+            
+            /*if (opcao == 1) {
                 criarConta();
                 limparBuffer();
             } else if (opcao == 2) {
@@ -404,6 +503,27 @@ public class Main {
                 if (u != null) {
                     menuUsuario(u);
                 }
+            }*/
+
+            switch (opcao) {
+                case 1:
+                    criarConta();
+                    limparTela();
+                    break;
+                case 2:
+                    Usuario u = fazerLoginUsuario();
+                    if (u != null) {
+                        menuUsuario(u);
+                    }
+                    break;
+                case 3:
+                    Cantor c = fazerLoginCantor();
+                    if (c != null) {
+                        menuCantor(c);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

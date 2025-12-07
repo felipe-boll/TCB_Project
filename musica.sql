@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`agencia` (
   `cnpj` VARCHAR(14) NOT NULL,
   PRIMARY KEY (`idagencia`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 29
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -40,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`banda` (
     FOREIGN KEY (`agencia_idagencia`)
     REFERENCES `mydb`.`agencia` (`idagencia`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 7
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -50,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`musica` (
   `idmusica` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(200) NOT NULL,
   `dificuldade` DOUBLE NOT NULL,
-  `duracao` VARCHAR(10) NOT NULL,
+  `duracao` TIME NOT NULL,
   `letra` TEXT NOT NULL,
   PRIMARY KEY (`idmusica`))
 ENGINE = InnoDB
@@ -81,17 +83,18 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`cantor` (
   `idcantor` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(200) NOT NULL,
   `banda_idbanda` INT NOT NULL,
-  `cpf` VARCHAR(15) NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
   `email` VARCHAR(250) NOT NULL,
   `idade` INT NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idcantor`),
   INDEX `fk_cantor_banda1_idx` (`banda_idbanda` ASC) VISIBLE,
   CONSTRAINT `fk_cantor_banda1`
     FOREIGN KEY (`banda_idbanda`)
     REFERENCES `mydb`.`banda` (`idbanda`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8mb3;
 
 
@@ -161,13 +164,14 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`usuario` (
   `idusuario` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(200) NOT NULL,
   `objetivo` VARCHAR(450) NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
   `email` VARCHAR(250) NOT NULL,
   `senha` VARCHAR(45) NOT NULL,
   `idade` INT NOT NULL,
   PRIMARY KEY (`idusuario`))
 ENGINE = InnoDB
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8mb3;
 
 

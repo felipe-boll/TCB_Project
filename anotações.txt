@@ -1,1 +1,1 @@
-Arrumar o problema do objetivo next()/nextLine()
+Atualizar o diagrama ER

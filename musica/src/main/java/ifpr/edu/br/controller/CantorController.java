@@ -24,8 +24,16 @@ public class CantorController {
     return dao.listarCantores();
   }
 
-  public void atualizarCantor(Cantor cantor){
-    dao.atualizarCantor(cantor);
+  public void atualizarCantorSenha(Cantor cantor){
+    dao.atualizarCantorSenha(cantor);
+  }
+
+  public void atualizarCantorBanda(Cantor cantor, int idBanda){
+    dao.atualizarCantorBanda(cantor, idBanda);
+  }
+
+  public Cantor login(int idCantor, String senha){
+    return dao.login(idCantor, senha);
   }
 
   public void deletarCantor(Cantor cantor){

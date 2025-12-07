@@ -92,19 +92,33 @@ public class UsuarioDAO {
         return lista;
     }
 
-    public void atualizarUsuario(Usuario usuario){
-        String sql = "UPDATE usuario SET nome = ?, cpf = ?, email = ?, idade = ?, objetivo = ? WHERE idusuario = ?";
+    public void atualizarSenha(Usuario usuario){
+        String sql = "UPDATE usuario SET senha = ? WHERE idusuario = ?";
 
         try{
             PreparedStatement psUsuario = con.prepareStatement(sql);
 
-            psUsuario.setString(1, usuario.getNome());
-            psUsuario.setString(2, usuario.getEmail());
-            psUsuario.setInt(3, usuario.getIdade());
-            psUsuario.setString(4, usuario.getObjetivo());
-            psUsuario.setInt(5, usuario.getUsuarioID());
+            psUsuario.setString(1, usuario.getSenha());
+            psUsuario.setInt(2, usuario.getUsuarioID());
+
+            psUsuario.executeUpdate();
         } catch(SQLException e){
-            throw new RuntimeException("Erro ao atualizar o usuario", e);
+            throw new RuntimeException("Erro ao atualizar o senha");
+        }
+    }
+
+    public void atualizarObjetivo(Usuario usuario){
+        String sql = "UPDATE usuario SET objetivo = ? WHERE idusuario = ?";
+
+        try{
+            PreparedStatement psUsuario = con.prepareStatement(sql);
+
+            psUsuario.setString(1, usuario.getObjetivo());
+            psUsuario.setInt(2, usuario.getUsuarioID());
+
+            psUsuario.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao atualizar o objetivo");
         }
     }
 
@@ -117,7 +131,7 @@ public class UsuarioDAO {
 
             psUsuario.executeUpdate();
         } catch(SQLException e){
-            throw new RuntimeException("Erro ao deletar o usuario", e);
+            throw new RuntimeException("Erro ao deletar o usuario");
         }
     }
 
