@@ -81,4 +81,28 @@ public class InstrumentoDAO {
             throw new RuntimeException("Erro ao deletar o instrumento");
         }
     }
+
+    public Instrumento selectInstrumento(int idInstrumento){
+        String sql = "SELECT * FROM instrumento WHERE idinstrumento = ?";
+
+        try{
+            PreparedStatement psInstrumento = con.prepareStatement(sql);
+
+            psInstrumento.setInt(1, idInstrumento);
+
+            ResultSet rs = psInstrumento.executeQuery();
+
+            if (rs.next()) {
+                Instrumento i = new Instrumento();
+                i.setInstrumentoID(rs.getInt("idInstrumento"));
+                i.setNome(rs.getString("nome"));
+                return i;
+            }
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao buscar instrumento por ID");
+
+        }
+
+        return null;
+    }
 }

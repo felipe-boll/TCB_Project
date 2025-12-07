@@ -31,4 +31,8 @@ public class InstrumentoController {
   public void deletarInstrumento(Instrumento instrumento){
     dao.deletarInstrumento(instrumento.getInstrumentoID());
   }
+
+  public Instrumento selectInstrumento(int idInstrumento){
+    return dao.selectInstrumento(idInstrumento);
+  }
 }

@@ -99,6 +99,26 @@ public class BandaDAO {
         }
     }
 
+    public Banda selectBanda(int idBanda){
+        String sql = "SELECT * FROM banda WHERE idbanda = ?";
 
+        try{
+            PreparedStatement psBanda = con.prepareStatement(sql);
+
+            psBanda.setInt(1, idBanda);
+            ResultSet rs = psBanda.executeQuery();
+
+            if (rs.next()) {
+                Banda b = new Banda();
+                b.setBandaID(rs.getInt("idBanda"));
+                b.setNome(rs.getString("nome"));
+                return b;
+            }
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao buscar banda por ID");
+        }
+
+        return null;
+    }
 
 }

@@ -33,4 +33,8 @@ public class BandaController {
   public void deletarBanda(Banda banda){
     dao.deletarBanda(banda.getBandaID());
   }
+
+  public Banda buscarPorID(int idBanda){
+    return dao.selectBanda(idBanda);
+  }
 }

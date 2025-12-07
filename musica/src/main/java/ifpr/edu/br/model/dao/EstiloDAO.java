@@ -86,4 +86,27 @@ public class EstiloDAO {
             throw new RuntimeException("Erro ao deletar o estilo");
         }
     }
+
+    public Estilo selectEstilo(int idEstilo){
+        String sql = "SELECT * FROM estilo WHERE idestilo = ?";
+
+        try{
+            PreparedStatement psEstilo = con.prepareStatement(sql);
+
+            psEstilo.setInt(1, idEstilo);
+
+            ResultSet rs = psEstilo.executeQuery();
+
+            if (rs.next()) {
+                Estilo e = new Estilo();
+                e.setEstiloID(rs.getInt("idEstilo"));
+                e.setNome(rs.getString("nome"));
+                return e;
+            }
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao buscar estilo por ID");
+        }
+
+        return null;
+    }
 }

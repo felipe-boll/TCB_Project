@@ -143,16 +143,12 @@ public class MusicaDAO {
         return lista;
     }
 
-    public void atualizarMusica(Musica musica) {
-        String sql = "UPDATE musica SET nome = ?, duracao = ?, dificuldade = ?, letra = ? WHERE idmusica = ?";
+    public void atualizarMusicaNome(Musica musica) {
+        String sql = "UPDATE musica SET nome = ? WHERE idmusica = ?";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, musica.getNome());
-            ps.setString(2, musica.getDuracao());
-            ps.setDouble(3, musica.getDificuldade());
-            ps.setString(4, musica.getLetra());
-            ps.setInt(5, musica.getMusicaID());
 
             ps.executeUpdate();
 
@@ -161,26 +157,74 @@ public class MusicaDAO {
         }
     }
 
-    public void atualizarBandasDaMusica(Musica musica) {
+    public void atualizarMusicaDuração(Musica musica) {
+        String sql = "UPDATE musica SET duracao = ? WHERE idmusica = ?";
 
-        String deleteSQL = "DELETE FROM banda_has_musica WHERE musica_idmusica = ?";
-        String insertSQL = "INSERT INTO banda_has_musica(banda_idbanda, musica_idmusica) VALUES (?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-        try {
-            PreparedStatement delete = con.prepareStatement(deleteSQL);
-            delete.setInt(1, musica.getMusicaID());
-            delete.executeUpdate();
+            ps.setString(1, musica.getDuracao());
 
-            PreparedStatement insert = con.prepareStatement(insertSQL);
-
-            for (Banda banda : musica.getBandas()) {
-                insert.setInt(1, banda.getBandaID());
-                insert.setInt(2, musica.getMusicaID());
-                insert.executeUpdate();
-            }
+            ps.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void atualizarMusicaDificuldade(Musica musica) {
+        String sql = "UPDATE musica SET dificuldade = ? WHERE idmusica = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setDouble(1, musica.getDificuldade());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void atualizarMusicaLetra(Musica musica) {
+        String sql = "UPDATE musica SET letra = ? WHERE idmusica = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, musica.getLetra());
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void adicionarBandaNaMusica(int idBanda, int idMusica){
+        String sql = "INSERT INTO banda_has_musica(banda_idbanda, musica_idmusica) VALUES (?, ?)";
+
+        try{
+            PreparedStatement psMusica = con.prepareStatement(sql);
+            
+            psMusica.setInt(1, idBanda);
+            psMusica.setInt(2, idMusica);
+
+            psMusica.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao inserir nova Banda a Musica");
+        }
+    }
+
+    public void deletarBandaDaMusica(int idBanda, int idMusica){
+        String sql = "DELETE FROM banda_has_musica WHERE banda_idbanda = ? AND musica_idmusica = ?";
+
+        try{
+            PreparedStatement psMusica = con.prepareStatement(sql);
+            psMusica.setInt(1, idBanda);
+            psMusica.setInt(2, idMusica);
+
+            psMusica.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao deletar banda de musica");
         }
     }
 
@@ -349,38 +393,59 @@ public class MusicaDAO {
     }
 
     public List<Musica> listarMusicasPorBanda(int idBanda) {
-    List<Musica> lista = new ArrayList<>();
+        List<Musica> lista = new ArrayList<>();
 
-    String sql = "SELECT m.* FROM musica m " +
-                 "JOIN banda_has_musica bm ON m.idmusica = bm.musica_idmusica " +
-                 "WHERE bm.banda_idbanda = ?";
+        String sql = "SELECT m.* FROM musica m " +
+                    "JOIN banda_has_musica bm ON m.idmusica = bm.musica_idmusica " +
+                    "WHERE bm.banda_idbanda = ?";
 
-    try {
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, idBanda);
-        ResultSet rs = ps.executeQuery();
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idBanda);
+            ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
-            Musica musica = new Musica();
-            musica.setMusicaID(rs.getInt("idmusica"));
-            musica.setNome(rs.getString("nome"));
-            musica.setDuracao(rs.getString("duracao"));
-            musica.setDificuldade(rs.getDouble("dificuldade"));
-            musica.setLetra(rs.getString("letra"));
+            while (rs.next()) {
+                Musica musica = new Musica();
+                musica.setMusicaID(rs.getInt("idmusica"));
+                musica.setNome(rs.getString("nome"));
+                musica.setDuracao(rs.getString("duracao"));
+                musica.setDificuldade(rs.getDouble("dificuldade"));
+                musica.setLetra(rs.getString("letra"));
 
-            // se quiser trazer as relações também
-            musica.setEstilos(listarEstilosPorMusica(musica.getMusicaID()));
-            musica.setInstrumentos(listarInstrumentosPorMusica(musica.getMusicaID()));
-            musica.setBandas(listarBandasPorMusica(musica.getMusicaID()));
+                musica.setEstilos(listarEstilosPorMusica(musica.getMusicaID()));
+                musica.setInstrumentos(listarInstrumentosPorMusica(musica.getMusicaID()));
+                musica.setBandas(listarBandasPorMusica(musica.getMusicaID()));
 
-            lista.add(musica);
+                lista.add(musica);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar músicas da banda", e);
         }
-    } catch (SQLException e) {
-        throw new RuntimeException("Erro ao listar músicas da banda", e);
+
+        return lista;
     }
 
-    return lista;
-}
+    public Musica selectMusica(int idMusica){
+        String sql = "SELECT * FROM musica WHERE idmusica = ?";
 
+        try{
+            PreparedStatement psMusica = con.prepareStatement(sql);
+
+            psMusica.setInt(1, idMusica);
+
+            ResultSet rs = psMusica.executeQuery();
+
+            if (rs.next()) {
+                Musica m = new Musica();
+                m.setMusicaID(rs.getInt("idMusica"));
+                m.setNome(rs.getString("nome"));
+                return m;
+            }
+        } catch(SQLException e ){
+            throw new RuntimeException("Erro ao buscar musica por ID");
+        }
+
+        return null;
+    }
 
 }

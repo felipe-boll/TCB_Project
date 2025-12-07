@@ -2,6 +2,7 @@ package ifpr.edu.br.controller;
 
 import java.util.List;
 
+import ifpr.edu.br.model.Banda;
 import ifpr.edu.br.model.Cantor;
 import ifpr.edu.br.model.Musica;
 import ifpr.edu.br.model.dao.MusicaDAO;
@@ -27,7 +28,7 @@ public class MusicaController {
     dao.salvarBandaHasMusica(musica);
     dao.salvarEstiloHasMusica(musica);
     dao.salvarInstrumentoHasMusica(musica);
-    dao.salvarUsuarioHasMusica(musica);
+    //dao.salvarUsuarioHasMusica(musica);
   }
 
   public List<Musica> listarMusicas(){
@@ -39,25 +40,17 @@ public class MusicaController {
     switch (opcao) {
 
         case 1:
-            dao.atualizarMusica(musica);
+            dao.atualizarMusicaNome(musica);
             break;
-
         case 2:
-            dao.atualizarBandasDaMusica(musica);
+            dao.atualizarMusicaDificuldade(musica);
             break;
-
         case 3:
-            dao.atualizarEstilosDaMusica(musica);
+            dao.atualizarMusicaDuração(musica);
             break;
-
         case 4:
-            dao.atualizarInstrumentosDaMusica(musica);
+            dao.atualizarMusicaLetra(musica);
             break;
-
-        case 5:
-            dao.atualizarUsuariosDaMusica(musica);
-            break;
-
         default:
             System.out.println("Opção inválida.");
             break;
@@ -70,6 +63,22 @@ public class MusicaController {
 
   public List<Musica> listarMusicasPorBanda(int idBanda) {
     return dao.listarMusicasPorBanda(idBanda);
+  }
+
+  public List<Banda> listarBandasPorMusica(int idMusica){
+    return dao.listarBandasPorMusica();
+  }
+
+  public Musica selectMusica(int idMusica){
+    return dao.selectMusica(idMusica);
+  }
+
+  public void adicionarBandaNaMusica(int idBanda, int idMusica){
+    dao.adicionarBandaNaMusica(idBanda, idMusica);
+  }
+
+  public void deletarBandaDaMusica(int idBanda, int idMusica){
+    dao.deletarBandaDaMusica(idBanda, idMusica);
   }
 
 }

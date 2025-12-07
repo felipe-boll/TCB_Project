@@ -31,4 +31,8 @@ public class EstiloController {
   public void deletarEstilo(Estilo estilo){
     dao.deletarEstilo(estilo.getEstiloID());
   }
+
+  public Estilo selectEstilo(int idEstilo){
+    return dao.selectEstilo(idEstilo);
+  }
 }

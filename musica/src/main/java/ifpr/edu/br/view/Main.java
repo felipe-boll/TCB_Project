@@ -14,6 +14,7 @@ import ifpr.edu.br.controller.UsuarioController;
 import ifpr.edu.br.model.Banda;
 import ifpr.edu.br.model.Cantor;
 import ifpr.edu.br.model.Estilo;
+import ifpr.edu.br.model.Instrumento;
 import ifpr.edu.br.model.Musica;
 import ifpr.edu.br.model.Usuario;
 
@@ -426,37 +427,17 @@ public class Main {
             switch (opcao) {
                 case 1:
                     limparTela();
-                    for(Musica musica : controllerMusica.listarMusicas()){
-                        String bandas = "";
-                        String estilos = "";
-                        String instrumentos = "";
-                        for(int i = 0; i < musica.getBandas().size(); i++){
-                            if (i == musica.getBandas().size() - 1) {
-                                bandas += musica.getBandas().get(i).getNome();
-                            } else{
-                                bandas += musica.getBandas().get(i).getNome() + ", ";
-                            }
-                        }
-                        for(int i = 0; i < musica.getEstilos().size(); i++){
-                            if (i == musica.getEstilos().size() - 1) {
-                            estilos += musica.getEstilos().get(i).getNome();
-                            } else{
-                                estilos += musica.getEstilos().get(i).getNome() + ", ";
-                            }
-                        }
-                        for(int i = 0; i < musica.getInstrumentos().size(); i++){
-                            if (i == musica.getInstrumentos().size() - 1) {
-                                instrumentos += musica.getInstrumentos().get(i).getNome();
-                            } else{
-                                instrumentos += musica.getInstrumentos().get(i).getNome() + ", ";
-                            }
-                        }
-                        System.out.printf("ID: %d | Nome: %s | Duração: %s | Dificuldade: %.1f | Bandas: %s | Estilos: %s | Instrumentos: %s", musica.getMusicaID(), musica.getNome(), musica.getDuracao(), musica.getDificuldade(), bandas, estilos, instrumentos);
+                    int idbanda = c.getBanda().getBandaID();
+                    List<Musica> musicas = controllerMusica.listarMusicasPorBanda(idbanda);
+
+                    if (musicas.isEmpty()) {
+                        System.out.println("Essa banda não possui musicas cadastradas");
+                        return;
                     }
-                    System.out.print("Pressione Enter para continuar...");
-                    limparBuffer();
-                    tecladoScanner.nextLine();
-                    break;
+                    System.out.printf("====Musicas da Banda %s====", c.getBanda().getNome());
+                    for(Musica musica : musicas){
+                        System.out.printf("%d - %s\n", musica.getMusicaID() ,musica.getNome());
+                    }
                 case 2:
                     limparTela();
                     System.out.printf("====Nova Musica====\n");
@@ -468,20 +449,188 @@ public class Main {
                     m.setDificuldade(tecladoScanner.nextDouble());
                     System.out.print("Letra: ");
                     m.setLetra(tecladoScanner.nextLine());
-                    System.out.print("Estilos: ");
-                    List<Estilo> es = new ArrayList<>();
-                    int i = 0;
+                    limparTela();
+                    System.out.printf("====Vamos adicionar os estilos====\n");
+                    List<Estilo> estilos = new ArrayList<>();
+                    for(Estilo estilo : controllerEstilo.listarEstilos()){
+                        System.out.printf("ID: %d | Nome: %s\n", estilo.getEstiloID(), estilo.getNome());
+                    }
                     while (true) {
-                        
+                        System.out.print("ID do Estilo: ");
+                        int idEstilo = Integer.parseInt(tecladoScanner.nextLine());
 
-                        System.out.println("Deseja adicionar mais estilos? (s/n)");
-                        String resposta = tecladoScanner.next().toLowerCase();
+                        Estilo e = controllerEstilo.selectEstilo(idEstilo);
+
+                        if (e == null) {
+                            System.out.println("Estilo não encontrado! Tente novamente");
+                            continue;
+                        }
+
+                        estilos.add(e);
+                        System.out.printf("Estilo adicionado: %s", e.getNome());
+
+                        System.out.print("Deseja adicionar outro estilo? (s/n): ");
+                        String resposta = tecladoScanner.nextLine().toLowerCase();
 
                         if (resposta.equals("n")) {
                             break;
                         }
                     }
-                    
+                    m.setEstilos(estilos);
+                    System.out.printf("====Vamos adicionar as bandas====\n");
+                    List<Banda> bandas = new ArrayList<>();
+                    for(Banda banda : controllerBanda.listarBandas()){
+                        String cantores = "";
+                        for(int i = 0; i < banda.getCantores().size(); i++){
+                            if (i == banda.getCantores().size() - 1) {
+                                cantores += banda.getCantores().get(i).getNome();
+                            } else{
+                                cantores += banda.getCantores().get(i).getNome() + ", ";
+                            }
+                        }
+                        System.out.printf("ID: %d | Agencia: %d | Nome: %s | Cantores: %s\n", banda.getBandaID(), banda.getAgenciaID(), banda.getNome(), cantores);
+                    }
+                    while (true) {
+                        System.out.print("ID da Banda: ");
+                        int idBanda = Integer.parseInt(tecladoScanner.nextLine());
+
+                        b = controllerBanda.buscarPorID(idBanda);
+
+                        if (b == null) {
+                            System.out.println("Banda não encontrada, tente novamente");
+                            continue;
+                        }
+
+                        bandas.add(b);
+                        System.out.printf("Banda adicionada: %s", b.getNome());
+
+                        System.out.print("Deseja adicionar outra banda? (s/n): ");
+                        String resposta = tecladoScanner.nextLine().toLowerCase();
+
+                        if (resposta.equals("n")) {
+                            break;
+                        }
+                    }
+                    m.setBandas(bandas);
+                    System.out.printf("====Vamos adicionar os instrumentos====\n");
+                    List<Instrumento> instrumentos = new ArrayList<>();
+                    for(Instrumento instrumento : controllerInstrumento.listaInstrumentos()){
+                        System.out.printf("ID: %d | Nome: %s", instrumento.getInstrumentoID(), instrumento.getNome());
+                    }
+                    while(true){
+                        System.out.print("ID do Instrumento: ");
+                        int idInstrumento = Integer.parseInt(tecladoScanner.nextLine());
+
+                        Instrumento i = controllerInstrumento.selectInstrumento(idInstrumento);
+
+                        if (i == null) {
+                            System.out.print("Instrumento não encontrado! Tente novamente");
+                            continue;
+                        }
+
+                        instrumentos.add(i);
+                        System.out.printf("Instrumento adicionado: %s", i.getNome());
+
+                        System.out.print("Deseja adicionar outro instrumento? (s/n): ");
+                        String resposta = tecladoScanner.nextLine().toLowerCase();
+
+                        if (resposta.equals("n")) {
+                            break;
+                        }
+                    }
+                    m.setInstrumentos(instrumentos);
+
+                    controllerMusica.cadastrarMusica(c, m);
+                case 3:
+                    limparTela();
+                    // ID da banda do cantor
+                    int idbandaa = c.getBanda().getBandaID();
+                    // Musicas da banda do cantor
+                    List<Musica> musicass = controllerMusica.listarMusicasPorBanda(idbandaa);
+
+                    if (musicass.isEmpty()) {
+                        System.out.println("Essa banda não possui musicas cadastradas");
+                        return;
+                    }
+                    System.out.printf("====Musicas da Banda %s====", c.getBanda().getNome());
+                    for(Musica musica : musicass){
+                        System.out.printf("%d - %s\n", musica.getMusicaID() ,musica.getNome());
+                    }
+                    System.out.println("Insira o ID da musica que deseja alterar");
+                    int idMusica = Integer.parseInt(tecladoScanner.nextLine());
+
+                    m = controllerMusica.selectMusica(idMusica);
+
+                    if (m == null) {
+                        System.out.print("Musica não encontrada! Tente novamente");
+                        continue;
+                    }
+
+                    while (true) {
+                        limparTela();
+                        System.out.printf("Oque deseja modificar na musica?\n1.Nome\n2.Dificuldade\n3.Duração\n4.Letra\n5.Bandas\n6.Estilos\n7.Instrumentos\n8.Voltar");
+                        limparBuffer();
+                        int alternativa = Integer.parseInt(tecladoScanner.nextLine());
+                        switch (alternativa) {
+                            case 1:
+                                limparTela();
+                                System.out.print("Informe o novo nome: ");
+                                limparBuffer();
+                                m.setNome(tecladoScanner.nextLine());
+                                controllerMusica.atualizarMusica(m, alternativa);
+                                System.out.println("Nome da musica atualizada");
+                                espera();
+                                break;
+                            case 2:
+                                limparTela();
+                                System.out.print("Informe a nova dificuldade: ");
+                                limparBuffer();
+                                m.setDificuldade(tecladoScanner.nextDouble());
+                                controllerMusica.atualizarMusica(m, alternativa);
+                                System.out.println("Dificuldade da musica atualizada");
+                                espera();
+                                break;
+                            case 3:
+                                limparTela();
+                                System.out.print("Informe a nova duração: ");
+                                limparBuffer();
+                                m.setDuracao(tecladoScanner.nextLine());
+                                controllerMusica.atualizarMusica(m, alternativa);
+                                System.out.println("Duração da musica atualizada");
+                                espera();
+                                break;
+                            case 4:
+                                limparTela();
+                                System.out.print("Informe a nova letra: ");
+                                limparBuffer();
+                                m.setLetra(tecladoScanner.nextLine());
+                                controllerMusica.atualizarMusica(m, alternativa);
+                                System.out.println("Letra da musica atualizada");
+                                espera();
+                                break;
+                            case 5:
+                                limparTela();
+                                System.out.print("Oque deseja?\n1.Adicionar uma banda\n2.Remover uma banda");
+                                int resposta = Integer.parseInt(tecladoScanner.nextLine());
+                                if (resposta == 1) {
+                                    limparTela();
+                                    for(Bandas bandas : controllerMusica.lis)
+                                    System.out.print("Digite o ID da banda que deseja adicionar: ");
+                                    int idBandaAdd = Integer.parseInt(tecladoScanner.nextLine());
+                                    controllerMusica.adicionarBandaNaMusica(idBandaAdd, idMusica);
+                                    System.out.println("Banda adicionada com secesso");
+                                } else{
+                                    limparTela();
+                                    System.out.print("Digite o ID da banda que deseja remover");
+                                    int idBandaRemov = Integer.parseInt(tecladoScanner.nextLine());
+                                    controllerMusica.deletarBandaDaMusica(idBandaRemov, idMusica);
+                                    System.out.println("Banda removida com sucesso");
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 default:
                     break;
             }
