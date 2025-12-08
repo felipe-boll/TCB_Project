@@ -23,4 +23,28 @@ Funcionalidades Principais:
     -Mudar senha
 
 Arquitetura do Projeto:
-  /src├── controller │ ├── AgenciaController.java │ ├── BandaController.java │ ├── CantorController.java │ ├── EstiloController.java │ ├── InstrumentoController.java │ ├── MusicaController.java │ ├── UsuarioController.java
+  /src├── controller │ ├── AgenciaController.java │ ├── BandaController.java │ ├── CantorController.java │ ├── EstiloController.java │ ├── InstrumentoController.java │ ├── MusicaController.java │ └── UsuarioController.java │ ├── model │ ├── Agencia.java │ ├── Banda.java │ ├── Cantor.java │ ├── Estilo.java │ ├── Instrumento.java │ ├── Musica.java │ └── Usuario.java │ └── view └── Main.java
+
+Banco de Dados
+
+Banco de dados MySQL com tabelas: agencia, banda, cantor, estilo, instrumento, musica, usuario, banda_has_musica, estilo_has_musica, musica_has_instrumento, usuario_has_musica
+
+Como Executar o Projeto Pré-requisitos
+
+Java 21+ MySQL 8+ JDBC IDE(InteliJ, VSCode) ou terminal
+
+Passos:
+  -Clone o repositório: git clone https://github.com/felipe-boll/TCB_Project.git
+  -Importe o projeto na IDE.
+  -Configure a conexão MySQL nos controllers.
+  -Execute o arquivo: Main.java
+
+Tecnologias Utilizadas:
+  -Java 21+
+  -MySQL 8+
+  -JDBC
+  -MVC
+  -Programação Orientada a Objetos
+
+Por: Felipe Chaves Boll
+Turma: 2° Técnico em Informatica IFPR - Câmpus Cascavel
