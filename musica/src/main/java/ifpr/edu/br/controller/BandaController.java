@@ -26,8 +26,12 @@ public class BandaController {
     return dao.listarBanda();
   }
 
-  public void atualizarBanda(Banda banda){
-    dao.atualizarBanda(banda);
+  public void atualizarNomeBanda(Banda banda){
+    dao.atualizarNomeBanda(banda);
+  }
+
+  public void atualizarAgenciaBanda(Banda banda){
+    dao.atualizarAgenciaBanda(banda);
   }
 
   public void deletarBanda(Banda banda){
@@ -36,5 +40,9 @@ public class BandaController {
 
   public Banda buscarPorID(int idBanda){
     return dao.selectBanda(idBanda);
+  }
+
+  public void removerCantorDaBanda(int idBanda, int idCantor){
+    dao.removerCantorDaBanda(idBanda, idCantor);
   }
 }

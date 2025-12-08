@@ -71,18 +71,31 @@ public class BandaDAO {
         return lista;
     }
 
-    public void atualizarBanda(Banda banda){
-        String sql = "UPDATE banda SET nome = ?, agencia_idagencia = ? WHERE idbanda = ?";
+    public void atualizarNomeBanda(Banda banda){
+        String sql = "UPDATE banda SET nome = ? WHERE idbanda = ?";
 
         try{
             PreparedStatement psBanda = con.prepareStatement(sql);
 
             psBanda.setString(1, banda.getNome());
-            psBanda.setInt(2, banda.getAgenciaID());
 
             psBanda.executeUpdate();
         } catch(SQLException e){
-            throw new RuntimeException("Erro ao atualizar a banda");
+            throw new RuntimeException("Erro ao mudar o nome da banda");
+        }
+    }
+
+    public void atualizarAgenciaBanda(Banda banda){
+        String sql = "UPDATE banda SET agencia_idagencia = ? WHERE idbanda = ?";
+
+        try{
+            PreparedStatement psBanda = con.prepareStatement(sql);
+
+            psBanda.setInt(1, banda.getAgenciaID());
+
+            psBanda.executeUpdate();
+        } catch(SQLException e){
+            throw new RuntimeException("Erro ao mudar a agencia da banda");
         }
     }
 
@@ -120,5 +133,20 @@ public class BandaDAO {
 
         return null;
     }
+
+    public void removerCantorDaBanda(int idBanda, int idCantor) {
+        String sql = "DELETE FROM banda_has_cantor WHERE banda_idbanda = ? AND cantor_idcantor = ?";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idBanda);
+            ps.setInt(2, idCantor);
+            ps.executeUpdate();
+            System.out.println("Cantor removido da banda com sucesso!");
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao remover cantor da banda");
+        }
+    }
+
 
 }

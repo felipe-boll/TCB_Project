@@ -11,6 +11,7 @@ import ifpr.edu.br.controller.EstiloController;
 import ifpr.edu.br.controller.InstrumentoController;
 import ifpr.edu.br.controller.MusicaController;
 import ifpr.edu.br.controller.UsuarioController;
+import ifpr.edu.br.model.Agencia;
 import ifpr.edu.br.model.Banda;
 import ifpr.edu.br.model.Cantor;
 import ifpr.edu.br.model.Estilo;
@@ -128,7 +129,10 @@ public class Main {
                 Banda b = new Banda();
                 System.out.print("Nome: ");
                 b.setNome(tecladoScanner.nextLine());
-                System.out.print("ID da Agencia: ");
+                for(Agencia agencia : controllerAgencia.listarAgencias()){
+                    System.out.printf("%d - %s\n", agencia.getAgenciaID(), agencia.getNome());
+                }
+                System.out.print("\nID da Agencia: ");
                 b.setAgenciaID(tecladoScanner.nextInt());
 
                 controllerBanda.cadastrarBanda(b);
@@ -633,6 +637,7 @@ public class Main {
                                     controllerMusica.deletarBandaDaMusica(idBandaRemov, idMusica);
                                     System.out.println("Banda removida com sucesso");
                                 }
+                                espera();
                                 break;
                             case 6:
                                 limparTela();
@@ -658,7 +663,8 @@ public class Main {
                                     int idEstiloRemov = Integer.parseInt(tecladoScanner.nextLine());
                                     controllerMusica.deletarEstiloDaMusica(idEstiloRemov, idbanda);
                                     System.out.println("Estilo removido com sucesso");
-                                } 
+                                }
+                                espera();
                                 break;
                             case 7:
                                 limparTela();
@@ -685,6 +691,7 @@ public class Main {
                                     controllerMusica.deletarInstrumentoDaMusica(idInstrumentoRemov, idbanda);
                                     System.out.println("Estilo removido com sucesso");
                                 }
+                                espera();
                                 break;
                             case 8:
                                 System.out.println("Voltando ao menu anterior...");
@@ -692,11 +699,71 @@ public class Main {
                                 break;
                             default:
                                 System.out.println("Opção Invalida!");
+                                espera();
                                 break;
                         }
                     }
                 case 4:
-                    
+                    limparTela();
+                    while (true) {
+                    System.out.print("====Vamos editar sua banda====\n");
+                    System.out.printf("Oque deseja alterar em sua banda?\n1.Alterar o nome\n2.Mudar de agencia\n3.Tirar membros\n4.Voltar\n");
+                    limparBuffer();
+                    int alternativa = Integer.parseInt(tecladoScanner.nextLine());
+                    switch (alternativa) {
+                        case 1:
+                            limparTela();
+                            System.out.print("Informe o novo nome: ");
+                            limparBuffer();
+                            b.setNome(tecladoScanner.nextLine());
+                            controllerBanda.atualizarNomeBanda(b);
+                            System.out.println("Nome da banda atualizada com sucesso");
+                            espera();
+                            break;
+                        case 2:
+                            limparTela();
+                            for(Agencia agencia : controllerAgencia.listarAgencias()){
+                                System.out.printf("%d - %s\n", agencia.getAgenciaID(), agencia.getNome());
+                            }
+                            System.out.print("Digite o ID da agencia que queira trocar: ");
+                            limparBuffer();
+                            b.setAgenciaID(tecladoScanner.nextInt());
+                            controllerBanda.atualizarAgenciaBanda(b);
+                            System.out.println("Agencia trocada com sucesso");
+                            espera();
+                            break;
+                        case 3:
+                            limparTela();
+                            System.out.printf("!!!!Remover Integrante!!!!\n");
+                            System.out.print("Certeza que deseja remover integrante? (s/n): ");
+                            String resposta = tecladoScanner.nextLine().toLowerCase();
+                            if (resposta.equals("n")) {
+                                System.out.println("Voltando ao menu anterior...");
+                                espera();
+                                break;
+                            }
+                            limparTela();
+                            idbanda = c.getBanda().getBandaID();
+                            for(Cantor cantor : controllerCantor.listarCantoresPorBanda(idbanda)){
+                                System.out.printf("%d - %s", cantor.getCantorID(), cantor.getNome());
+                            }
+                            System.out.print("Digite o ID do integrante que deseja exluir: ");
+                            int idCantor = tecladoScanner.nextInt();
+                            controllerBanda.removerCantorDaBanda(idbanda, idCantor);
+                            System.out.println("Cantor removido com sucesso!");
+                            espera();
+                            break;
+                        case 4: 
+                            limparTela();
+                            System.out.println("Voltando ao menu anterior...");
+                            espera();
+                            break;
+                        default:
+                            System.out.println("Opção Invalida");
+                            espera();
+                            break;
+                    }
+                    }
                 default:
                     break;
             }
@@ -734,7 +801,7 @@ public class Main {
                 case 3:
                     Cantor c = fazerLoginCantor();
                     if (c != null) {
-                        menuCantor(c);
+                        menuCantor(c, null, null);
                     }
                     break;
                 default:

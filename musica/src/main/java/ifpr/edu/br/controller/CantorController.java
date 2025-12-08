@@ -24,6 +24,10 @@ public class CantorController {
     return dao.listarCantores();
   }
 
+  public List<Cantor> listarCantoresPorBanda(int idBanda){
+    return dao.listarCantoresPorBanda(idBanda);
+  }
+
   public void atualizarCantorSenha(Cantor cantor){
     dao.atualizarCantorSenha(cantor);
   }
