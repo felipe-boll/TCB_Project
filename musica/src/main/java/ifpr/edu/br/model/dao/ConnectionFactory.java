@@ -13,10 +13,10 @@ public class ConnectionFactory {
         try{
             if (connection == null) {
                 String url = "jdbc:mysql://localhost:3306/mydb";
-                String user = "root";
-                //String user = "aluno";
-                //String password = "aluno";
-                String password = "FcB@28072009";
+                //String user = "root";
+                String user = "aluno";
+                String password = "aluno";
+                //String password = "FcB@28072009";
                 connection = DriverManager.getConnection(url, user, password);
                 System.out.println("conectado ao banco com sucesso");
             }

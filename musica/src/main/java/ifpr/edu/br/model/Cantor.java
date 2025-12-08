@@ -1,5 +1,6 @@
 package ifpr.edu.br.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cantor{
@@ -8,7 +9,7 @@ public class Cantor{
     private int idade;
     private String senha;
     // Isso esta sendo usado Felipe;
-    private List<Musica> musicas;
+    private List<Musica> musicas = new ArrayList<>();
     private Banda banda;
     private int cantorID;
 
@@ -22,6 +23,10 @@ public class Cantor{
 
     public Cantor(){
 
+    }
+
+    public void addMusica(Musica musica){
+        this.musicas.add(musica);
     }
 
     public List<Musica> getMusicas() {

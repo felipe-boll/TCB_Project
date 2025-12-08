@@ -24,7 +24,6 @@ public class MusicaController {
     if (musica.getLetra() == null || musica.getLetra().trim().isEmpty()) {
       throw new IllegalArgumentException("A letra da musica não pode estar vazia");
     }
-    
     dao.salvarMusica(cantor);
 
     dao.salvarBandaHasMusica(musica);
