@@ -208,12 +208,12 @@ public class Main {
                             instrumentos += musica.getInstrumentos().get(i).getNome() + ", ";
                         }
                     }
-                    System.out.printf("ID: %d | Nome: %s | Duração: %s | Dificuldade: %.1f | Bandas: %s | Estilos: %s | Instrumentos: %s", musica.getMusicaID(), musica.getNome(), musica.getDuracao(), musica.getDificuldade(), bandas, estilos, instrumentos);
+                    System.out.printf("ID: %d | Nome: %s | Duração: %s | Dificuldade: %.1f | Bandas: %s | Estilos: %s | Instrumentos: %s\n", musica.getMusicaID(), musica.getNome(), musica.getDuracao(), musica.getDificuldade(), bandas, estilos, instrumentos);
                 }
                 limparBuffer();
                 System.out.print("Pressione Enter para continuar...\n");
-                tecladoScanner.nextLine();
                 limparBuffer();
+                tecladoScanner.nextLine();
                 break;
             case 2:
                 limparTela();

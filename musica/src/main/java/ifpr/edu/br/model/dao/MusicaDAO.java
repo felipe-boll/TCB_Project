@@ -52,7 +52,7 @@ public class MusicaDAO {
     }
 
     public void salvarEstiloHasMusica(Musica musica){
-        String sql = "INSERT INTO estilo_has_musica(estilo_idestilo, musica_idmusica) VALUES(?, ?)";
+        String sql = "INSERT INTO estilo_has_estilo(estilo_idestilo, musica_idmusica) VALUES(?, ?)";
 
         try (PreparedStatement psEstilo = con.prepareStatement(sql)) {
 
@@ -392,7 +392,7 @@ public class MusicaDAO {
         String sql = """
             SELECT e.idestilo, e.nome
             FROM estilo e
-            JOIN musica_has_estilo mhe ON e.idestilo = mhe.estilo_idestilo
+            JOIN estilo_has_musica mhe ON e.idestilo = mhe.estilo_idestilo
             WHERE mhe.musica_idmusica = ?
             """;
 
